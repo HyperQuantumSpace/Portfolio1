@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Quantum Cryptography Landscape</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+            color: #CBD5E1;
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(51, 65, 85, 0.3) 39px, rgba(51, 65, 85, 0.3) 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(51, 65, 85, 0.3) 39px, rgba(51, 65, 85, 0.3) 40px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #6366F1 0%, transparent 70%);
+            top: 10%;
+            left: 15%;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #10B981 0%, transparent 70%);
+            top: 15%;
+            right: 10%;
+        }
+
+        .orb-3 {
+            width: 360px;
+            height: 360px;
+            background: radial-gradient(circle, #F59E0B 0%, transparent 70%);
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #FFFFFF;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: #94A3B8;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .author {
+            font-size: 1.1rem;
+            color: #64748B;
+            font-style: italic;
+        }
+
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #6366F1 20%, #6366F1 80%, transparent);
+            margin: 30px auto;
+            max-width: 1200px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .threat-banner {
+            background: #1E293B;
+            border: 3px solid #EF4444;
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin: 40px auto;
+            max-width: 1400px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .threat-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.5));
+            pointer-events: none;
+        }
+
+        .threat-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+            position: relative;
+            z-index: 1;
+        }
+
+        .threat-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .threat-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #FCA5A5;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .threat-text {
+            font-size: 1rem;
+            color: #CBD5E1;
+        }
+
+        .section-header {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #FFFFFF;
+            letter-spacing: 0.5px;
+            margin: 60px 0 30px 0;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #6366F1, #4F46E5);
+            border-radius: 3px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .card {
+            background: #1E293B;
+            border: 1px solid #475569;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top right, rgba(71, 85, 105, 0.2), transparent 70%);
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-header {
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background: radial-gradient(circle at top left, white, transparent);
+        }
+
+        .card-header.lattice {
+            background: linear-gradient(135deg, #818CF8, #6366F1, #4F46E5);
+            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .card-header.hash {
+            background: linear-gradient(135deg, #34D399, #10B981, #059669);
+            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .card-header.code {
+            background: linear-gradient(135deg, #FBBF24, #F59E0B, #D97706);
+            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .card-header.multi {
+            background: linear-gradient(135deg, #2DD4BF, #14B8A6, #0891B2);
+            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .card-header.iso {
+            background: linear-gradient(135deg, #F472B6, #EC4899, #DB2777);
+            box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .card-corners {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .corner-tl { top: 20px; left: 20px; }
+        .corner-tr { top: 20px; right: 20px; }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: white;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.95rem;
+            color: white;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .badge.primary {
+            background: linear-gradient(135deg, #6366F1, #4F46E5);
+            color: white;
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+        }
+
+        .badge.success {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
+        }
+
+        .badge.warning {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+        }
+
+        .badge.info {
+            background: linear-gradient(135deg, #14B8A6, #0891B2);
+            color: white;
+            box-shadow: 0 0 25px rgba(20, 184, 166, 0.5);
+        }
+
+        .badge.danger {
+            background: linear-gradient(135deg, #EC4899, #DB2777);
+            color: white;
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #F1F5F9;
+            margin: 20px 0 12px 0;
+        }
+
+        .list-item {
+            font-size: 0.95rem;
+            color: #CBD5E1;
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+
+        .list-item.success {
+            color: #34D399;
+        }
+
+        .list-item.danger {
+            color: #F87171;
+        }
+
+        .status-badge {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .use-case-card {
+            background: #1E293B;
+            border: 1px solid #475569;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .use-case-header {
+            padding: 25px 30px;
+            position: relative;
+        }
+
+        .use-case-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background: radial-gradient(circle at top left, white, transparent);
+        }
+
+        .use-case-header.encryption {
+            background: linear-gradient(135deg, #6366F1, #4F46E5);
+        }
+
+        .use-case-header.signatures {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .use-case-header.hybrid {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+        }
+
+        .use-case-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .use-case-body {
+            padding: 30px;
+        }
+
+        .highlight-box {
+            background: rgba(79, 70, 229, 0.8);
+            padding: 15px 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 25px;
+            box-shadow: 0 0 25px rgba(79, 70, 229, 0.4);
+        }
+
+        .highlight-box.success {
+            background: rgba(5, 150, 105, 0.8);
+            box-shadow: 0 0 25px rgba(5, 150, 105, 0.4);
+        }
+
+        .highlight-box.warning {
+            background: rgba(217, 119, 6, 0.8);
+            box-shadow: 0 0 25px rgba(217, 119, 6, 0.4);
+        }
+
+        .timeline {
+            background: #1E293B;
+            border: 1px solid #475569;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at bottom right, rgba(71, 85, 105, 0.1), transparent 70%);
+            pointer-events: none;
+            border-radius: 20px;
+        }
+
+        .timeline-phases {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .phase {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .phase.phase-1 {
+            background: linear-gradient(135deg, #34D399, #10B981);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
+        }
+
+        .phase.phase-2 {
+            background: linear-gradient(135deg, #818CF8, #6366F1);
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+        }
+
+        .phase.phase-3 {
+            background: linear-gradient(135deg, #FBBF24, #F59E0B);
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+        }
+
+        .phase.phase-4 {
+            background: linear-gradient(135deg, #F472B6, #EC4899);
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+        }
+
+        .phase-year {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .phase-label {
+            font-size: 0.95rem;
+            color: white;
+            opacity: 0.95;
+        }
+
+        .arrow {
+            color: #64748B;
+            font-size: 2rem;
+            opacity: 0.8;
+        }
+
+        .timeline-warning {
+            background: linear-gradient(135deg, #DC2626, #B91C1C);
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.6);
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin: 60px 0 20px 0;
+            font-size: 0.95rem;
+            color: #64748B;
+            font-style: italic;
+        }
+
+        @media (max-width: 1400px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-header {
+                font-size: 1.8rem;
+            }
+
+            .use-cases-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-phases {
+                flex-direction: column;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Post-Quantum Cryptography Landscape</h1>
+            <p class="subtitle">Protecting against the quantum computing revolution</p>
+            <p class="author">By Sky Sharma</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="threat-banner">
+            <div class="threat-icon">!</div>
+            <div class="threat-content">
+                <div class="threat-title">QUANTUM THREAT</div>
+                <div class="threat-text">Quantum computers will break RSA, ECC, and other classical cryptography systems</div>
+            </div>
+        </div>
+
+        <h2 class="section-header">Five Cryptographic Approaches</h2>
+
+        <div class="cards-grid">
+            <!-- Card 1: Lattice-Based -->
+            <div class="card">
+                <div class="card-header lattice">
+                    <div class="card-corners corner-tl"></div>
+                    <div class="card-corners corner-tr"></div>
+                    <h3 class="card-title">Lattice-Based</h3>
+                    <p class="card-subtitle">High-dimensional grid structures</p>
+                </div>
+                <div class="card-body">
+                    <div class="badge primary">✓ NIST STANDARDIZED</div>
+                    
+                    <div class="section-title">Standards:</div>
+                    <div class="list-item">• ML-KEM (Kyber)</div>
+                    <div class="list-item">• ML-DSA (Dilithium)</div>
+                    <div class="list-item">• FN-DSA (FALCON)</div>
+                    
+                    <div class="section-title">Key Strengths:</div>
+                    <div class="list-item success">✓ Encryption + Signatures</div>
+                    <div class="list-item success">✓ Fast performance</div>
+                    <div class="list-item success">✓ Compact keys (~1-2 KB)</div>
+                    
+                    <div class="status-badge primary">⭐ PRIMARY CHOICE</div>
+                </div>
+            </div>
+
+            <!-- Card 2: Hash-Based -->
+            <div class="card">
+                <div class="card-header hash">
+                    <div class="card-corners corner-tl"></div>
+                    <div class="card-corners corner-tr"></div>
+                    <h3 class="card-title">Hash-Based</h3>
+                    <p class="card-subtitle">Cryptographic hash functions</p>
+                </div>
+                <div class="card-body">
+                    <div class="badge success">✓ NIST STANDARDIZED</div>
+                    
+                    <div class="section-title">Standards:</div>
+                    <div class="list-item">• SLH-DSA (SPHINCS+)</div>
+                    
+                    <div class="section-title">Key Strengths:</div>
+                    <div class="list-item success">✓ Most conservative</div>
+                    <div class="list-item success">✓ Long history (1970s)</div>
+                    
+                    <div class="section-title">Limitations:</div>
+                    <div class="list-item danger">✗ Signatures only</div>
+                    <div class="list-item danger">✗ Large signature sizes</div>
+                    
+                    <div class="status-badge success">BACKUP OPTION</div>
+                </div>
+            </div>
+
+            <!-- Card 3: Code-Based -->
+            <div class="card">
+                <div class="card-header code">
+                    <div class="card-corners corner-tl"></div>
+                    <div class="card-corners corner-tr"></div>
+                    <h3 class="card-title">Code-Based</h3>
+                    <p class="card-subtitle">Error-correcting codes</p>
+                </div>
+                <div class="card-body">
+                    <div class="badge warning">MATURE APPROACH</div>
+                    
+                    <div class="section-title">Examples:</div>
+                    <div class="list-item">• McEliece (encryption)</div>
+                    <div class="list-item">• Classic McEliece</div>
+                    
+                    <div class="section-title">Key Strengths:</div>
+                    <div class="list-item success">✓ Very mature (40+ years)</div>
+                    <div class="list-item success">✓ Well-studied security</div>
+                    
+                    <div class="section-title">Limitations:</div>
+                    <div class="list-item danger">✗ Very large keys (MB)</div>
+                    
+                    <div class="status-badge warning">SPECIALIZED USE</div>
+                </div>
+            </div>
+
+            <!-- Card 4: Multivariate -->
+            <div class="card">
+                <div class="card-header multi">
+                    <div class="card-corners corner-tl"></div>
+                    <div class="card-corners corner-tr"></div>
+                    <h3 class="card-title">Multivariate</h3>
+                    <p class="card-subtitle">Polynomial equations</p>
+                </div>
+                <div class="card-body">
+                    <div class="badge info">RESEARCH ACTIVE</div>
+                    
+                    <div class="section-title">Examples:</div>
+                    <div class="list-item">• Rainbow (broken 2022)</div>
+                    <div class="list-item">• UOV, HFE variants</div>
+                    
+                    <div class="section-title">Key Strengths:</div>
+                    <div class="list-item success">✓ Fast verification</div>
+                    <div class="list-item success">✓ Small signatures</div>
+                    
+                    <div class="section-title">Challenges:</div>
+                    <div class="list-item danger">✗ Recent breaks</div>
+                    
+                    <div class="status-badge info">UNDER REVIEW</div>
+                </div>
+            </div>
+
+            <!-- Card 5: Isogeny-Based -->
+            <div class="card">
+                <div class="card-header iso">
+                    <div class="card-corners corner-tl"></div>
+                    <div class="card-corners corner-tr"></div>
+                    <h3 class="card-title">Isogeny-Based</h3>
+                    <p class="card-subtitle">Elliptic curve isogenies</p>
+                </div>
+                <div class="card-body">
+                    <div class="badge danger">EMERGING FIELD</div>
+                    
+                    <div class="section-title">Examples:</div>
+                    <div class="list-item">• SIKE (broken 2022)</div>
+                    <div class="list-item">• CSIDH</div>
+                    
+                    <div class="section-title">Key Strengths:</div>
+                    <div class="list-item success">✓ Smallest key sizes</div>
+                    <div class="list-item success">✓ Interesting math</div>
+                    
+                    <div class="section-title">Status:</div>
+                    <div class="list-item danger">⚠ Recent vulnerability</div>
+                    
+                    <div class="status-badge danger">RESEARCH PHASE</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-header">Primary Use Cases</h2>
+
+        <div class="use-cases-grid">
+            <!-- Use Case 1: Encryption -->
+            <div class="use-case-card">
+                <div class="use-case-header encryption">
+                    <h3 class="use-case-title">🔒 ENCRYPTION</h3>
+                </div>
+                <div class="use-case-body">
+                    <div class="highlight-box">Best Solution: Lattice-Based ML-KEM</div>
+                    
+                    <div class="section-title">Why Lattice-Based Wins:</div>
+                    <div class="list-item">• Only practical PQC encryption option</div>
+                    <div class="list-item">• Key sizes ~1-2 KB (vs MB for code-based)</div>
+                    <div class="list-item">• Deployed in: TLS, VPNs, secure messaging</div>
+                </div>
+            </div>
+
+            <!-- Use Case 2: Signatures -->
+            <div class="use-case-card">
+                <div class="use-case-header signatures">
+                    <h3 class="use-case-title">✍️ DIGITAL SIGNATURES</h3>
+                </div>
+                <div class="use-case-body">
+                    <div class="highlight-box success">Multiple Strong Options Available</div>
+                    
+                    <div class="section-title">NIST Standardized Options:</div>
+                    <div class="list-item">• ML-DSA (Dilithium) - Fast performance</div>
+                    <div class="list-item">• FN-DSA (FALCON) - Compact signatures</div>
+                    <div class="list-item">• SLH-DSA (SPHINCS+) - Conservative choice</div>
+                </div>
+            </div>
+
+            <!-- Use Case 3: Hybrid -->
+            <div class="use-case-card">
+                <div class="use-case-header hybrid">
+                    <h3 class="use-case-title">🔄 HYBRID APPROACH</h3>
+                </div>
+                <div class="use-case-body">
+                    <div class="highlight-box warning">Recommended for Migration Period</div>
+                    
+                    <div class="section-title">Defense-in-Depth Strategy:</div>
+                    <div class="list-item">• Combine classical (RSA/ECC) + PQC algorithms</div>
+                    <div class="list-item">• Protected even if one cryptosystem fails</div>
+                    <div class="list-item">• Smooth migration with backward compatibility</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-header">Deployment Timeline</h2>
+
+        <div class="timeline">
+            <div class="timeline-phases">
+                <div class="phase phase-1">
+                    <div class="phase-year">2024</div>
+                    <div class="phase-label">NIST Standards Released</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="phase phase-2">
+                    <div class="phase-year">2025-2026</div>
+                    <div class="phase-label">Early Adoption</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="phase phase-3">
+                    <div class="phase-year">2027-2030</div>
+                    <div class="phase-label">Mass Migration</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="phase phase-4">
+                    <div class="phase-year">2030+</div>
+                    <div class="phase-label">Widespread Deployment</div>
+                </div>
+            </div>
+
+            <div class="timeline-warning">
+                ⚠️ "Harvest now, decrypt later" threat is active NOW
+            </div>
+        </div>
+
+        <div class="footer">
+            The transition to post-quantum cryptography represents one of the largest security upgrades in computing history
+        </div>
+    </div>
+</body>
+</html>
