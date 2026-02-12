@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CISO Cognitive Map — Sky Sharma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --black:    #050810;
+    --deep:     #080d1a;
+    --surface:  #0d1628;
+    --card:     #111d35;
+    --border:   rgba(0,180,255,0.12);
+    --gold:     #c9a84c;
+    --gold-lt:  rgba(201,168,76,0.65);
+    --gold-dim: rgba(201,168,76,0.35);
+    --gold-faint: rgba(201,168,76,0.08);
+
+    --cyan:     #00b4ff;
+    --cyan-lt:  rgba(0,180,255,0.15);
+    --teal:     #00e5cc;
+    --violet:   #9b5cff;
+    --red:      #ff4757;
+    --orange:   #ff8c42;
+    --green:    #00e676;
+    --blue:     #448aff;
+
+    --text:     #d0ddf5;
+    --muted:    rgba(160,185,230,0.45);
+    --glow:     rgba(0,180,255,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND GRID ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,180,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,180,255,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── RADIAL GLOW ── */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140vw;
+    height: 60vh;
+    background: radial-gradient(ellipse, rgba(0,100,200,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── DIAGONAL WATERMARK ── */
+  .wm-diagonal {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+  }
+  .wm-diagonal::before {
+    content: 'SKY SHARMA · CISO & CYBER LEADER · SKY SHARMA · CISO & CYBER LEADER · SKY SHARMA · CISO & CYBER LEADER ·';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-35deg);
+    white-space: nowrap;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 5px;
+    color: rgba(201,168,76,0.045);
+    text-transform: uppercase;
+    width: 280%;
+    text-align: center;
+    line-height: 1;
+  }
+  .wm-diagonal::after {
+    content: 'AI · QUANTUM · DATA ETHICS · COGNITIVE INNOVATOR · DRIVING GLOBAL IMPACT · AI · QUANTUM · DATA ETHICS ·';
+    position: absolute;
+    top: calc(50% + 55px);
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-35deg);
+    white-space: nowrap;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: rgba(201,168,76,0.032);
+    text-transform: uppercase;
+    width: 280%;
+    text-align: center;
+    line-height: 1;
+  }
+
+  /* ── CORNER STAMP ── */
+  .wm-corner {
+    position: fixed;
+    bottom: 28px;
+    right: 32px;
+    z-index: 1000;
+    pointer-events: none;
+    text-align: right;
+    border-right: 2px solid rgba(201,168,76,0.28);
+    padding-right: 12px;
+  }
+  .wm-corner-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: rgba(201,168,76,0.58);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .wm-corner-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    color: rgba(201,168,76,0.32);
+    text-transform: uppercase;
+    line-height: 1.7;
+    max-width: 240px;
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 32px 60px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 56px 0 36px;
+    text-align: center;
+    position: relative;
+  }
+
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+
+  .header-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #fff;
+    text-shadow: 0 0 40px rgba(0,180,255,0.4), 0 0 80px rgba(0,180,255,0.15);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .header-subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: var(--gold-lt);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .header-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--gold), var(--cyan), transparent);
+    opacity: 0.4;
+    margin-bottom: 36px;
+  }
+
+  /* ── CENTER HUB ── */
+  .center-hub {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 48px;
+  }
+
+  .hub-node {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hub-ring-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(0,180,255,0.25);
+    animation: spinSlow 20s linear infinite;
+    background: conic-gradient(from 0deg, transparent 0%, rgba(0,180,255,0.08) 30%, transparent 60%);
+  }
+  .hub-ring-mid {
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.3);
+    animation: spinSlow 14s linear infinite reverse;
+  }
+  .hub-ring-inner {
+    position: absolute;
+    inset: 28px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0,180,255,0.12) 0%, rgba(5,8,16,0.95) 70%);
+    border: 1px solid rgba(0,180,255,0.35);
+    backdrop-filter: blur(8px);
+  }
+
+  .hub-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hub-icon {
+    font-size: 36px;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 0 12px rgba(0,180,255,0.6));
+  }
+
+  .hub-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .hub-sublabel {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--gold-lt);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  /* ── DOMAIN GRID ── */
+  .domain-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 1100px) { .domain-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 760px)  { .domain-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px)  { .domain-grid { grid-template-columns: 1fr; } }
+
+  /* ── DOMAIN CARD ── */
+  .domain-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease;
+    animation: fadeUp .5s ease forwards;
+    opacity: 0;
+  }
+
+  .domain-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 20px var(--card-glow, rgba(0,180,255,0.1));
+  }
+
+  .card-accent {
+    height: 3px;
+    width: 100%;
+  }
+
+  .card-header {
+    padding: 16px 18px 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .card-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 6px var(--icon-color, #00b4ff));
+  }
+
+  .card-title-wrap { flex: 1; }
+
+  .card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #fff;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .card-domain-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    margin-top: 3px;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .card-body {
+    padding: 12px 18px 16px;
+  }
+
+  /* ── RESPONSIBILITY ITEMS ── */
+  .resp-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .resp-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(200,215,245,0.8);
+    line-height: 1.4;
+    padding: 3px 0;
+  }
+
+  .resp-bullet {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  /* ── SUB-TAGS ── */
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 10px;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+
+  /* ── ORBITAL CONNECTORS (decorative SVG) ── */
+  .orbital-svg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.06;
+  }
+
+  /* ── STAT BAND ── */
+  .stat-band {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 28px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 900px) { .stat-band { grid-template-columns: repeat(3, 1fr); } }
+
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── LIFECYCLE BAR ── */
+  .lifecycle-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+
+  .section-header {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,180,255,0.3), transparent);
+  }
+
+  .lifecycle-track {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .lifecycle-track::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 4%;
+    right: 4%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet), var(--gold));
+    opacity: 0.3;
+    z-index: 0;
+  }
+
+  .lc-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .lc-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    border: 2px solid;
+    background: var(--card);
+    position: relative;
+  }
+
+  .lc-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 80px;
+    line-height: 1.4;
+  }
+
+  /* ── MATURITY LADDER ── */
+  .maturity-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+
+  .maturity-bars {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 36px;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 700px) { .maturity-bars { grid-template-columns: 1fr; } }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 36px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bar-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--text);
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    position: relative;
+    animation: barGrow 1.2s ease forwards;
+    transform-origin: left;
+  }
+
+  .bar-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* ── REPORTING STRUCTURE ── */
+  .reporting-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+
+  .org-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .org-level {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: relative;
+    width: 100%;
+  }
+
+  .org-node {
+    background: var(--card);
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 10px 16px;
+    text-align: center;
+    position: relative;
+  }
+
+  .org-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .org-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .org-connector {
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(to bottom, rgba(0,180,255,0.4), rgba(0,180,255,0.1));
+    margin: 0 auto;
+  }
+
+  .org-horiz-line {
+    height: 2px;
+    width: 70%;
+    background: rgba(0,180,255,0.15);
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid rgba(0,180,255,0.1);
+    padding: 36px 0 24px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    margin-top: 24px;
+  }
+
+  .footer-brand {
+    display: inline-block;
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 16px 40px;
+    margin-bottom: 18px;
+    position: relative;
+    background: rgba(201,168,76,0.03);
+  }
+
+  .footer-brand::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 24px; right: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .footer-brand::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 24px; right: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .footer-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 5px;
+    color: var(--gold-lt);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+
+  .footer-tagline {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    color: rgba(201,168,76,0.5);
+    text-transform: uppercase;
+    line-height: 2;
+  }
+
+  .footer-copy {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes barGrow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.5; }
+  }
+
+  .pulse { animation: pulse 2s ease-in-out infinite; }
+
+  /* ── DELAY CLASSES ── */
+  .d1  { animation-delay: .05s; }
+  .d2  { animation-delay: .10s; }
+  .d3  { animation-delay: .15s; }
+  .d4  { animation-delay: .20s; }
+  .d5  { animation-delay: .25s; }
+  .d6  { animation-delay: .30s; }
+  .d7  { animation-delay: .35s; }
+  .d8  { animation-delay: .40s; }
+  .d9  { animation-delay: .45s; }
+  .d10 { animation-delay: .50s; }
+  .d11 { animation-delay: .55s; }
+  .d12 { animation-delay: .60s; }
+  .d13 { animation-delay: .65s; }
+  .d14 { animation-delay: .70s; }
+  .d15 { animation-delay: .75s; }
+  .d16 { animation-delay: .80s; }
+</style>
+</head>
+<body>
+
+<!-- WATERMARKS -->
+<div class="wm-diagonal"></div>
+<div class="wm-corner">
+  <div class="wm-corner-name">Sky Sharma</div>
+  <div class="wm-corner-title">CISO &amp; Cyber Leader<br>Cognitive Innovator<br>AI · Quantum · Data Ethics Expert<br>Driving Global Impact</div>
+</div>
+
+<div class="page">
+
+  <!-- ══════════════════ HEADER ══════════════════ -->
+  <header class="header">
+    <div class="header-eyebrow">Executive Intelligence Framework</div>
+    <h1 class="header-title">CISO COGNITIVE MAP</h1>
+    <div class="header-subtitle">The Complete Mental Model of Modern Cybersecurity Leadership</div>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- ══════════════════ STAT BAND ══════════════════ -->
+  <div class="stat-band">
+    <div class="stat-item">
+      <div class="stat-num" style="color:#00b4ff">12</div>
+      <div class="stat-label">Core Domains</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="color:#c9a84c">80+</div>
+      <div class="stat-label">Responsibilities</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="color:#9b5cff">7</div>
+      <div class="stat-label">Lifecycle Phases</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="color:#00e676">360°</div>
+      <div class="stat-label">Stakeholder View</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="color:#ff8c42">24/7</div>
+      <div class="stat-label">Operational Tempo</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="color:#00e5cc">∞</div>
+      <div class="stat-label">Risk Surface</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ CENTER HUB ══════════════════ -->
+  <div class="center-hub">
+    <div class="hub-node">
+      <div class="hub-ring-outer"></div>
+      <div class="hub-ring-mid"></div>
+      <div class="hub-ring-inner"></div>
+      <div class="hub-content">
+        <div class="hub-icon">🛡️</div>
+        <div class="hub-label">CHIEF INFORMATION<br>SECURITY OFFICER</div>
+        <div class="hub-sublabel">The Cognitive Core</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ DOMAIN GRID ══════════════════ -->
+  <div class="domain-grid">
+
+    <!-- 1. GOVERNANCE, RISK & COMPLIANCE -->
+    <div class="domain-card d1" style="--card-glow:rgba(0,180,255,0.14)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#00b4ff,#448aff)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#00b4ff">⚖️</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Governance, Risk & Compliance</div>
+          <div class="card-domain-tag" style="color:#00b4ff">GRC · STRATEGY · POLICY</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#00b4ff"></span>Develop & maintain enterprise security strategy aligned to business objectives</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00b4ff"></span>Build and govern the Information Security Policy Framework (50+ policies)</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00b4ff"></span>Own enterprise risk register; quantify risk in financial terms (FAIR model)</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00b4ff"></span>Oversee compliance: NIST CSF, ISO 27001, SOC 2, FedRAMP, CMMC, HIPAA, PCI DSS</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00b4ff"></span>Conduct annual risk assessments & third-party audits</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00b4ff"></span>Interface with legal, regulatory bodies, and external auditors</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00b4ff"></span>Manage exceptions process & risk acceptance procedures</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#00b4ff;border-color:rgba(0,180,255,0.3);background:rgba(0,180,255,0.06)">NIST CSF</span>
+          <span class="tag" style="color:#00b4ff;border-color:rgba(0,180,255,0.3);background:rgba(0,180,255,0.06)">ISO 27001</span>
+          <span class="tag" style="color:#00b4ff;border-color:rgba(0,180,255,0.3);background:rgba(0,180,255,0.06)">SOC 2</span>
+          <span class="tag" style="color:#00b4ff;border-color:rgba(0,180,255,0.3);background:rgba(0,180,255,0.06)">CMMC</span>
+          <span class="tag" style="color:#00b4ff;border-color:rgba(0,180,255,0.3);background:rgba(0,180,255,0.06)">FAIR</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SECURITY OPERATIONS -->
+    <div class="domain-card d2" style="--card-glow:rgba(255,71,87,0.14)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#ff4757,#ff8c42)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#ff4757">🔴</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Security Operations Center</div>
+          <div class="card-domain-tag" style="color:#ff4757">SOC · DETECTION · RESPONSE</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff4757"></span>Lead 24/7 SOC operations — monitor, detect, analyze, respond, recover</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff4757"></span>Manage SIEM platform tuning: alert fidelity, detection rule engineering</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff4757"></span>Drive SOAR automation and playbook development to compress MTTR</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff4757"></span>Oversee threat intelligence lifecycle: collection, analysis, dissemination</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff4757"></span>Govern Incident Response (IR) program; act as IR commander for P1 events</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff4757"></span>Track and report KPIs: MTTD, MTTR, alert volume, false positive rate</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff4757"></span>Coordinate with federal agencies, ISAC sharing, law enforcement as needed</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#ff4757;border-color:rgba(255,71,87,0.3);background:rgba(255,71,87,0.06)">SIEM</span>
+          <span class="tag" style="color:#ff4757;border-color:rgba(255,71,87,0.3);background:rgba(255,71,87,0.06)">SOAR</span>
+          <span class="tag" style="color:#ff4757;border-color:rgba(255,71,87,0.3);background:rgba(255,71,87,0.06)">XDR</span>
+          <span class="tag" style="color:#ff4757;border-color:rgba(255,71,87,0.3);background:rgba(255,71,87,0.06)">CTI</span>
+          <span class="tag" style="color:#ff4757;border-color:rgba(255,71,87,0.3);background:rgba(255,71,87,0.06)">MTTD/MTTR</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. IDENTITY & ACCESS MANAGEMENT -->
+    <div class="domain-card d3" style="--card-glow:rgba(155,92,255,0.14)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#9b5cff,#00b4ff)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#9b5cff">🔐</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Identity & Access Management</div>
+          <div class="card-domain-tag" style="color:#9b5cff">IAM · PAM · ZERO TRUST</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Define and enforce Zero Trust Architecture (ZTA) across all access layers</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Govern IAM platform: SSO, MFA, adaptive authentication, lifecycle management</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Oversee Privileged Access Management (PAM) — JIT access, session recording</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Manage user access reviews, role recertification, segregation of duties (SoD)</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Deploy identity threat detection: impossible travel, credential stuffing alerts</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Drive SCIM/SAML federation and directory services governance</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#9b5cff;border-color:rgba(155,92,255,0.3);background:rgba(155,92,255,0.06)">Zero Trust</span>
+          <span class="tag" style="color:#9b5cff;border-color:rgba(155,92,255,0.3);background:rgba(155,92,255,0.06)">PAM</span>
+          <span class="tag" style="color:#9b5cff;border-color:rgba(155,92,255,0.3);background:rgba(155,92,255,0.06)">MFA</span>
+          <span class="tag" style="color:#9b5cff;border-color:rgba(155,92,255,0.3);background:rgba(155,92,255,0.06)">SAML</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. CLOUD & INFRASTRUCTURE SECURITY -->
+    <div class="domain-card d4" style="--card-glow:rgba(0,229,204,0.14)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#00e5cc,#00b4ff)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#00e5cc">☁️</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Cloud & Infrastructure Security</div>
+          <div class="card-domain-tag" style="color:#00e5cc">CSPM · CWPP · CNAPP</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Architect cloud security posture across AWS, Azure, GCP multi-cloud estates</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Deploy and tune CSPM, CWPP, CNAPP for real-time misconfiguration detection</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Define cloud security guardrails: SCPs, landing zones, network segmentation</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Govern container & Kubernetes security (image scanning, runtime protection)</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Oversee network security: NDR, micro-segmentation, SD-WAN, SASE/SSE</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Manage ICS/OT/IoT security domains where applicable</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#00e5cc;border-color:rgba(0,229,204,0.3);background:rgba(0,229,204,0.06)">CSPM</span>
+          <span class="tag" style="color:#00e5cc;border-color:rgba(0,229,204,0.3);background:rgba(0,229,204,0.06)">CNAPP</span>
+          <span class="tag" style="color:#00e5cc;border-color:rgba(0,229,204,0.3);background:rgba(0,229,204,0.06)">SASE</span>
+          <span class="tag" style="color:#00e5cc;border-color:rgba(0,229,204,0.3);background:rgba(0,229,204,0.06)">NDR</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. APPLICATION & PRODUCT SECURITY -->
+    <div class="domain-card d5" style="--card-glow:rgba(0,230,118,0.14)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#00e676,#00b4ff)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#00e676">💻</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Application & Product Security</div>
+          <div class="card-domain-tag" style="color:#00e676">SAST · DAST · DEVSECOPS</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e676"></span>Embed security into SDLC via DevSecOps — shift-left from design to deploy</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e676"></span>Govern SAST, DAST, SCA, IAST toolchain integration in CI/CD pipelines</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e676"></span>Lead Secure Code Review program and developer security training</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e676"></span>Run Bug Bounty program and coordinate coordinated vulnerability disclosure</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e676"></span>Oversee API security, OAuth2.0, supply chain security (SBOM, SLSA)</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e676"></span>Manage penetration testing program (internal red team + third-party)</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#00e676;border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.06)">DevSecOps</span>
+          <span class="tag" style="color:#00e676;border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.06)">SBOM</span>
+          <span class="tag" style="color:#00e676;border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.06)">SCA</span>
+          <span class="tag" style="color:#00e676;border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.06)">Red Team</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. DATA SECURITY & PRIVACY -->
+    <div class="domain-card d6" style="--card-glow:rgba(255,140,66,0.14)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#ff8c42,#c9a84c)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#ff8c42">🗄️</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Data Security & Privacy</div>
+          <div class="card-domain-tag" style="color:#ff8c42">DLP · DSPM · GDPR · CCPA</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Build data classification framework: Public → Confidential → Restricted → Secret</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Govern DLP/DSPM controls across structured & unstructured data at rest/transit</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Lead encryption strategy: key management, tokenization, HSM governance</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Align security program to GDPR, CCPA, HIPAA, state privacy laws</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Oversee data rights management: DSAR handling, consent management</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Govern database activity monitoring (DAM) and data lineage visibility</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#ff8c42;border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06)">DLP</span>
+          <span class="tag" style="color:#ff8c42;border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06)">DSPM</span>
+          <span class="tag" style="color:#ff8c42;border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06)">GDPR</span>
+          <span class="tag" style="color:#ff8c42;border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06)">CCPA</span>
+          <span class="tag" style="color:#ff8c42;border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06)">HSM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. AI, EMERGING TECH & QUANTUM -->
+    <div class="domain-card d7" style="--card-glow:rgba(201,168,76,0.18)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#c9a84c,#9b5cff)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#c9a84c">⚛️</span>
+        <div class="card-title-wrap">
+          <div class="card-title">AI Security & Quantum Readiness</div>
+          <div class="card-domain-tag" style="color:#c9a84c">AI GOVERNANCE · PQC · EMERGING RISK</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Govern AI/ML security: model poisoning, adversarial inputs, LLM prompt injection</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Build AI Risk Framework aligned to NIST AI RMF, EU AI Act, CISA guidance</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Lead Post-Quantum Cryptography (PQC) migration roadmap — CRYSTALS-Kyber/Dilithium</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Conduct "Harvest Now, Decrypt Later" threat analysis; prioritize crypto agility</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Assess risks from synthetic media, deepfakes, AI-generated phishing</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Evaluate quantum-safe key distribution (QKD) and cryptographic inventory</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#c9a84c;border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.07)">PQC</span>
+          <span class="tag" style="color:#c9a84c;border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.07)">AI RMF</span>
+          <span class="tag" style="color:#c9a84c;border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.07)">Crypto Agility</span>
+          <span class="tag" style="color:#c9a84c;border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.07)">LLM Sec</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. VENDOR & THIRD-PARTY RISK -->
+    <div class="domain-card d8" style="--card-glow:rgba(68,138,255,0.14)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#448aff,#9b5cff)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#448aff">🤝</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Vendor & Third-Party Risk Mgmt</div>
+          <div class="card-domain-tag" style="color:#448aff">TPRM · SCRM · DUE DILIGENCE</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#448aff"></span>Operate TPRM program: vendor risk tiering, security questionnaires, SIG/CAIQ</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#448aff"></span>Review and negotiate security terms in vendor contracts and MSAs</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#448aff"></span>Govern supply chain risk: hardware/software bill of materials, trusted suppliers</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#448aff"></span>Conduct continuous monitoring of critical third-parties via attack surface tools</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#448aff"></span>Manage fourth-party concentration risk and sub-processor visibility</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#448aff"></span>Respond to SolarWinds/MOVEit-style supply chain compromise events</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#448aff;border-color:rgba(68,138,255,0.3);background:rgba(68,138,255,0.06)">TPRM</span>
+          <span class="tag" style="color:#448aff;border-color:rgba(68,138,255,0.3);background:rgba(68,138,255,0.06)">SCRM</span>
+          <span class="tag" style="color:#448aff;border-color:rgba(68,138,255,0.3);background:rgba(68,138,255,0.06)">CAIQ</span>
+          <span class="tag" style="color:#448aff;border-color:rgba(68,138,255,0.3);background:rgba(68,138,255,0.06)">SIG</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. BUSINESS RESILIENCE & BCP/DR -->
+    <div class="domain-card d9" style="--card-glow:rgba(0,229,204,0.12)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#00e5cc,#00e676)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#00e5cc">♻️</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Business Resilience & BC/DR</div>
+          <div class="card-domain-tag" style="color:#00e5cc">BCP · DR · CRISIS MANAGEMENT</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Own Business Continuity Plan (BCP) and Disaster Recovery (DR) programs</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Define and test RTOs and RPOs across all critical business systems</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Lead tabletop exercises, red team simulations, and full DR failover drills</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Govern ransomware response playbooks; manage immutable backup strategy</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Crisis management: executive communication, media response, regulatory notification</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#00e5cc"></span>Align resilience plans with ISO 22301 and NIST SP 800-34</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#00e5cc;border-color:rgba(0,229,204,0.3);background:rgba(0,229,204,0.06)">ISO 22301</span>
+          <span class="tag" style="color:#00e5cc;border-color:rgba(0,229,204,0.3);background:rgba(0,229,204,0.06)">RTO/RPO</span>
+          <span class="tag" style="color:#00e5cc;border-color:rgba(0,229,204,0.3);background:rgba(0,229,204,0.06)">Tabletop</span>
+          <span class="tag" style="color:#00e5cc;border-color:rgba(0,229,204,0.3);background:rgba(0,229,204,0.06)">Ransomware</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. PEOPLE, CULTURE & SECURITY AWARENESS -->
+    <div class="domain-card d10" style="--card-glow:rgba(255,140,66,0.12)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#ff8c42,#ff4757)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#ff8c42">👥</span>
+        <div class="card-title-wrap">
+          <div class="card-title">People, Culture & Awareness</div>
+          <div class="card-domain-tag" style="color:#ff8c42">SECURITY CULTURE · TALENT · TRAINING</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Recruit, develop, and retain world-class cybersecurity talent across all teams</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Run Security Awareness Training (SAT) program; phishing simulations quarterly</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Build a security-first culture across all business units and regions</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Define security team career frameworks, certifications roadmap (CISSP, CISM, etc.)</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Drive executive security briefings; train board and C-suite on cyber risk literacy</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#ff8c42"></span>Manage insider threat program — behavioral analytics, HR collaboration</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#ff8c42;border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06)">SAT</span>
+          <span class="tag" style="color:#ff8c42;border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06)">CISSP</span>
+          <span class="tag" style="color:#ff8c42;border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06)">CISM</span>
+          <span class="tag" style="color:#ff8c42;border-color:rgba(255,140,66,0.3);background:rgba(255,140,66,0.06)">Insider Threat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. EXECUTIVE & BOARD COMMUNICATION -->
+    <div class="domain-card d11" style="--card-glow:rgba(201,168,76,0.16)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#c9a84c,#ff8c42)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#c9a84c">📊</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Executive & Board Communication</div>
+          <div class="card-domain-tag" style="color:#c9a84c">BOARD · C-SUITE · METRICS · ROI</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Present quarterly cyber risk reports to Board Audit/Risk Committees</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Translate technical risk into business/financial impact language (EAL, ALE)</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Build and manage annual security budget; ROI justification for investments</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Define CISO security dashboard: risk posture KPIs, maturity scores, coverage</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Advise CEO/CFO/GC on cyber insurance, M&A security due diligence</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#c9a84c"></span>Respond to security-related investor inquiries and ESG reporting requirements</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#c9a84c;border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.07)">Board Reporting</span>
+          <span class="tag" style="color:#c9a84c;border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.07)">ALE/EAL</span>
+          <span class="tag" style="color:#c9a84c;border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.07)">Budget</span>
+          <span class="tag" style="color:#c9a84c;border-color:rgba(201,168,76,0.35);background:rgba(201,168,76,0.07)">M&A SecDD</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. VULNERABILITY & THREAT MANAGEMENT -->
+    <div class="domain-card d12" style="--card-glow:rgba(155,92,255,0.14)">
+      <div class="card-accent" style="background:linear-gradient(90deg,#9b5cff,#ff4757)"></div>
+      <div class="card-header">
+        <span class="card-icon" style="--icon-color:#9b5cff">🔍</span>
+        <div class="card-title-wrap">
+          <div class="card-title">Vulnerability & Threat Mgmt</div>
+          <div class="card-domain-tag" style="color:#9b5cff">VM · TVM · ASM · PENTESTING</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <ul class="resp-list">
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Run enterprise Vulnerability Management (VM) program with risk-based SLAs</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Govern Attack Surface Management (ASM): external exposure, shadow IT discovery</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Prioritize patching via CVSS, EPSS, and business criticality weighting</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Run red team/blue team/purple team exercises to validate security controls</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Respond to zero-day advisories with emergency patching protocols</li>
+          <li class="resp-item"><span class="resp-bullet" style="background:#9b5cff"></span>Maintain vulnerability metrics: remediation SLA compliance, mean time to patch</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag" style="color:#9b5cff;border-color:rgba(155,92,255,0.3);background:rgba(155,92,255,0.06)">CVSS/EPSS</span>
+          <span class="tag" style="color:#9b5cff;border-color:rgba(155,92,255,0.3);background:rgba(155,92,255,0.06)">ASM</span>
+          <span class="tag" style="color:#9b5cff;border-color:rgba(155,92,255,0.3);background:rgba(155,92,255,0.06)">Purple Team</span>
+          <span class="tag" style="color:#9b5cff;border-color:rgba(155,92,255,0.3);background:rgba(155,92,255,0.06)">Zero-Day</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /domain-grid -->
+
+  <!-- ══════════════════ LIFECYCLE TRACK ══════════════════ -->
+  <div class="lifecycle-section">
+    <div class="section-header">CISO Security Lifecycle — Continuous Operating Model</div>
+    <div class="lifecycle-track">
+
+      <div class="lc-node">
+        <div class="lc-circle" style="border-color:rgba(0,180,255,0.5);box-shadow:0 0 20px rgba(0,180,255,0.15)">🔭</div>
+        <div class="lc-label" style="color:#00b4ff">Identify &amp; Inventory</div>
+      </div>
+
+      <div class="lc-node">
+        <div class="lc-circle" style="border-color:rgba(155,92,255,0.5);box-shadow:0 0 20px rgba(155,92,255,0.15)">🛡️</div>
+        <div class="lc-label" style="color:#9b5cff">Protect &amp; Harden</div>
+      </div>
+
+      <div class="lc-node">
+        <div class="lc-circle" style="border-color:rgba(255,71,87,0.5);box-shadow:0 0 20px rgba(255,71,87,0.15)">🔍</div>
+        <div class="lc-label" style="color:#ff4757">Detect &amp; Analyze</div>
+      </div>
+
+      <div class="lc-node">
+        <div class="lc-circle" style="border-color:rgba(255,140,66,0.5);box-shadow:0 0 20px rgba(255,140,66,0.15)">⚡</div>
+        <div class="lc-label" style="color:#ff8c42">Respond &amp; Contain</div>
+      </div>
+
+      <div class="lc-node">
+        <div class="lc-circle" style="border-color:rgba(0,230,118,0.5);box-shadow:0 0 20px rgba(0,230,118,0.15)">🔄</div>
+        <div class="lc-label" style="color:#00e676">Recover &amp; Restore</div>
+      </div>
+
+      <div class="lc-node">
+        <div class="lc-circle" style="border-color:rgba(0,229,204,0.5);box-shadow:0 0 20px rgba(0,229,204,0.15)">📈</div>
+        <div class="lc-label" style="color:#00e5cc">Measure &amp; Report</div>
+      </div>
+
+      <div class="lc-node">
+        <div class="lc-circle" style="border-color:rgba(201,168,76,0.5);box-shadow:0 0 20px rgba(201,168,76,0.15)">🚀</div>
+        <div class="lc-label" style="color:#c9a84c">Evolve &amp; Innovate</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════ MATURITY METRICS ══════════════════ -->
+  <div class="maturity-section">
+    <div class="section-header">Security Program Maturity Dimensions — CISO Ownership</div>
+    <div class="maturity-bars">
+
+      <div class="bar-row">
+        <div class="bar-label">Threat Intelligence</div>
+        <div class="bar-track"><div class="bar-fill" style="width:92%;background:linear-gradient(90deg,#ff4757,#ff8c42)"></div></div>
+        <div class="bar-pct">92%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Zero Trust Adoption</div>
+        <div class="bar-track"><div class="bar-fill" style="width:78%;background:linear-gradient(90deg,#9b5cff,#448aff)"></div></div>
+        <div class="bar-pct">78%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Cloud Security Posture</div>
+        <div class="bar-track"><div class="bar-fill" style="width:85%;background:linear-gradient(90deg,#00e5cc,#00b4ff)"></div></div>
+        <div class="bar-pct">85%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">DevSecOps Integration</div>
+        <div class="bar-track"><div class="bar-fill" style="width:71%;background:linear-gradient(90deg,#00e676,#00e5cc)"></div></div>
+        <div class="bar-pct">71%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Third-Party Risk Mgmt</div>
+        <div class="bar-track"><div class="bar-fill" style="width:80%;background:linear-gradient(90deg,#448aff,#9b5cff)"></div></div>
+        <div class="bar-pct">80%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Data Classification</div>
+        <div class="bar-track"><div class="bar-fill" style="width:88%;background:linear-gradient(90deg,#ff8c42,#c9a84c)"></div></div>
+        <div class="bar-pct">88%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">AI/ML Security</div>
+        <div class="bar-track"><div class="bar-fill" style="width:65%;background:linear-gradient(90deg,#c9a84c,#9b5cff)"></div></div>
+        <div class="bar-pct">65%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Post-Quantum Readiness</div>
+        <div class="bar-track"><div class="bar-fill" style="width:42%;background:linear-gradient(90deg,#c9a84c,#ff8c42)"></div></div>
+        <div class="bar-pct">42%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Security Awareness</div>
+        <div class="bar-track"><div class="bar-fill" style="width:90%;background:linear-gradient(90deg,#ff8c42,#ff4757)"></div></div>
+        <div class="bar-pct">90%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Incident Response Speed</div>
+        <div class="bar-track"><div class="bar-fill" style="width:87%;background:linear-gradient(90deg,#ff4757,#9b5cff)"></div></div>
+        <div class="bar-pct">87%</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════ REPORTING STRUCTURE ══════════════════ -->
+  <div class="reporting-section">
+    <div class="section-header">CISO Stakeholder Ecosystem — Reporting & Accountability</div>
+    <div class="org-tree">
+
+      <!-- Board Level -->
+      <div class="org-level">
+        <div class="org-node" style="border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.05)">
+          <div class="org-title" style="color:#c9a84c">Board of Directors</div>
+          <div class="org-role">Audit / Risk Committee</div>
+        </div>
+      </div>
+
+      <div class="org-connector"></div>
+
+      <!-- C-Suite Peers -->
+      <div class="org-level" style="gap:8px">
+        <div class="org-node" style="border-color:rgba(0,180,255,0.25)">
+          <div class="org-title" style="color:#fff">CEO</div>
+          <div class="org-role">Primary Reporting</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(255,71,87,0.35);background:rgba(255,71,87,0.04)">
+          <div class="org-title" style="color:#ff4757">CISO</div>
+          <div class="org-role">YOU · Security Executive</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(0,180,255,0.25)">
+          <div class="org-title" style="color:#fff">CTO / CIO</div>
+          <div class="org-role">Tech Partnership</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(0,180,255,0.25)">
+          <div class="org-title" style="color:#fff">CFO / GC</div>
+          <div class="org-role">Budget &amp; Legal</div>
+        </div>
+      </div>
+
+      <div class="org-connector"></div>
+      <div class="org-horiz-line"></div>
+      <div style="height:12px"></div>
+
+      <!-- Direct Reports -->
+      <div class="org-level" style="gap:8px">
+        <div class="org-node" style="border-color:rgba(0,180,255,0.2);min-width:110px">
+          <div class="org-title" style="color:#00b4ff;font-size:8px">Director</div>
+          <div class="org-role">GRC</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(255,71,87,0.2);min-width:110px">
+          <div class="org-title" style="color:#ff4757;font-size:8px">Director</div>
+          <div class="org-role">SOC / IR</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(155,92,255,0.2);min-width:110px">
+          <div class="org-title" style="color:#9b5cff;font-size:8px">Director</div>
+          <div class="org-role">IAM / ZT</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(0,229,204,0.2);min-width:110px">
+          <div class="org-title" style="color:#00e5cc;font-size:8px">Director</div>
+          <div class="org-role">Cloud Sec</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(0,230,118,0.2);min-width:110px">
+          <div class="org-title" style="color:#00e676;font-size:8px">Director</div>
+          <div class="org-role">AppSec</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(255,140,66,0.2);min-width:110px">
+          <div class="org-title" style="color:#ff8c42;font-size:8px">Director</div>
+          <div class="org-role">Data Sec</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════ FOOTER ══════════════════ -->
+  <footer class="footer">
+    <div style="font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:16px;opacity:0.7">CISO COGNITIVE MAP · EXECUTIVE INTELLIGENCE FRAMEWORK</div>
+
+    <div class="footer-brand">
+      <div class="footer-name">Sky Sharma</div>
+      <div class="footer-tagline">
+        CISO &amp; Cyber Leader &nbsp;·&nbsp; Cognitive Innovator &nbsp;·&nbsp; AI, Quantum &amp; Data Ethics Expert &nbsp;·&nbsp; Driving Global Impact
+      </div>
+    </div>
+
+    <br>
+    <div class="footer-copy">For professional and educational purposes &nbsp;·&nbsp; © Sky Sharma 2026 &nbsp;·&nbsp; All domain content reflects enterprise security best practices</div>
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+  // Staggered card reveal using IntersectionObserver
+  const cards = document.querySelectorAll('.domain-card');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animationPlayState = 'running';
+      }
+    });
+  }, { threshold: 0.05 });
+
+  cards.forEach(c => {
+    c.style.animationPlayState = 'paused';
+    obs.observe(c);
+  });
+</script>
+
+</body>
+</html>
