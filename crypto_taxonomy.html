@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryptocurrency Taxonomy & Creation Mechanisms</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dark: #8B6914;
+    --deep: #050A0F;
+    --panel: #080E16;
+    --border: rgba(201,168,76,0.2);
+    --text: #D4C5A0;
+    --muted: #6B7A8A;
+    --white: #F0EBE0;
+
+    --pow: #E85D2F;
+    --pos: #2FE8A8;
+    --algo: #5D9CE8;
+    --stable: #E8D42F;
+    --defi: #B45DE8;
+    --meme: #E85D9C;
+    --cbdc: #5DE8E8;
+    --nft: #E8A02F;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* RADIAL GLOW */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120vw;
+    height: 70vh;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── DIAGONAL WATERMARK ── */
+  .watermark-diagonal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+  }
+
+  .watermark-diagonal::before {
+    content: 'SKY SHARMA · CISO & CYBER LEADER · SKY SHARMA · CISO & CYBER LEADER · SKY SHARMA · CISO & CYBER LEADER ·';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-35deg);
+    white-space: nowrap;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 5px;
+    color: rgba(201,168,76,0.055);
+    text-transform: uppercase;
+    font-weight: 500;
+    width: 250%;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .watermark-diagonal::after {
+    content: 'AI · QUANTUM · DATA ETHICS · COGNITIVE INNOVATOR · AI · QUANTUM · DATA ETHICS · COGNITIVE INNOVATOR ·';
+    position: absolute;
+    top: calc(50% + 60px);
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-35deg);
+    white-space: nowrap;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: rgba(201,168,76,0.04);
+    text-transform: uppercase;
+    width: 250%;
+    text-align: center;
+    line-height: 1;
+  }
+
+  /* ── CORNER WATERMARK STAMP ── */
+  .watermark-corner {
+    position: fixed;
+    bottom: 28px;
+    right: 32px;
+    z-index: 1000;
+    pointer-events: none;
+    text-align: right;
+    border-right: 2px solid rgba(201,168,76,0.25);
+    padding-right: 14px;
+  }
+
+  .wm-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 3px;
+    color: rgba(201,168,76,0.55);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  .wm-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 7.5px;
+    letter-spacing: 1.5px;
+    color: rgba(201,168,76,0.3);
+    text-transform: uppercase;
+    line-height: 1.6;
+    max-width: 260px;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 70px;
+    position: relative;
+  }
+
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 110px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .header h1 span {
+    color: var(--gold);
+    display: block;
+  }
+
+  .header-sub {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--muted);
+    margin-top: 18px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .header-line {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 28px auto 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  /* ── CREATION MECHANISM LEGEND ── */
+  .legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.0s;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── CREATION METHODS FLOW ── */
+  .creation-flow {
+    margin-bottom: 70px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.1s;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .methods-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .method-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    cursor: default;
+  }
+
+  .method-block:hover {
+    transform: translateY(-4px);
+    z-index: 10;
+  }
+
+  .method-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .method-block.pow::before { background: var(--pow); box-shadow: 0 0 20px var(--pow); }
+  .method-block.pos::before { background: var(--pos); box-shadow: 0 0 20px var(--pos); }
+  .method-block.algo::before { background: var(--algo); box-shadow: 0 0 20px var(--algo); }
+  .method-block.issued::before { background: var(--stable); box-shadow: 0 0 20px var(--stable); }
+
+  .method-block:hover.pow { border-color: rgba(232,93,47,0.5); }
+  .method-block:hover.pos { border-color: rgba(47,232,168,0.5); }
+  .method-block:hover.algo { border-color: rgba(93,156,232,0.5); }
+  .method-block:hover.issued { border-color: rgba(232,212,47,0.5); }
+
+  .method-icon {
+    font-size: 32px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .method-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .method-tag {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  .pow .method-tag { background: rgba(232,93,47,0.15); color: var(--pow); border: 1px solid rgba(232,93,47,0.3); }
+  .pos .method-tag { background: rgba(47,232,168,0.15); color: var(--pos); border: 1px solid rgba(47,232,168,0.3); }
+  .algo .method-tag { background: rgba(93,156,232,0.15); color: var(--algo); border: 1px solid rgba(93,156,232,0.3); }
+  .issued .method-tag { background: rgba(232,212,47,0.15); color: var(--stable); border: 1px solid rgba(232,212,47,0.3); }
+
+  .method-desc {
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .method-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .metric {
+    background: rgba(255,255,255,0.03);
+    padding: 8px 10px;
+    border-radius: 2px;
+  }
+
+  .metric-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+
+  .metric-value {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .method-examples {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .ex-tag {
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── TAXONOMY CARDS ── */
+  .taxonomy-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 50px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.3s;
+  }
+
+  .crypto-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .crypto-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .card-header {
+    padding: 22px 22px 18px;
+    position: relative;
+  }
+
+  .card-glow {
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+    opacity: 0.15;
+    filter: blur(20px);
+  }
+
+  .card-symbol {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .card-type {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+
+  .card-subtitle {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .card-badge {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .card-badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+  }
+
+  .card-body {
+    padding: 0 22px 22px;
+  }
+
+  .card-desc {
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .card-creation {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+
+  .card-creation-label {
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .card-creation-text {
+    font-size: 10px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .card-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .stat-box {
+    text-align: center;
+    padding: 8px 4px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+  }
+
+  .stat-val {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .stat-lbl {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .coin-examples {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .coin-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    background: rgba(255,255,255,0.02);
+    border-left: 2px solid transparent;
+    font-size: 10px;
+    transition: all 0.2s ease;
+  }
+
+  .coin-row:hover {
+    background: rgba(255,255,255,0.05);
+  }
+
+  .coin-name { color: var(--text); font-weight: 500; }
+  .coin-detail { color: var(--muted); font-size: 9px; }
+
+  /* Card color themes */
+  .card-pow .card-glow { background: var(--pow); }
+  .card-pow .card-badge { color: var(--pow); border: 1px solid rgba(232,93,47,0.3); background: rgba(232,93,47,0.1); }
+  .card-pow .coin-row:hover { border-left-color: var(--pow); }
+  .card-pow::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(232,93,47,0.03) 0%, transparent 60%); pointer-events: none; }
+
+  .card-pos .card-glow { background: var(--pos); }
+  .card-pos .card-badge { color: var(--pos); border: 1px solid rgba(47,232,168,0.3); background: rgba(47,232,168,0.1); }
+  .card-pos .coin-row:hover { border-left-color: var(--pos); }
+  .card-pos::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(47,232,168,0.03) 0%, transparent 60%); pointer-events: none; }
+
+  .card-stable .card-glow { background: var(--stable); }
+  .card-stable .card-badge { color: var(--stable); border: 1px solid rgba(232,212,47,0.3); background: rgba(232,212,47,0.1); }
+  .card-stable .coin-row:hover { border-left-color: var(--stable); }
+  .card-stable::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(232,212,47,0.03) 0%, transparent 60%); pointer-events: none; }
+
+  .card-defi .card-glow { background: var(--defi); }
+  .card-defi .card-badge { color: var(--defi); border: 1px solid rgba(180,93,232,0.3); background: rgba(180,93,232,0.1); }
+  .card-defi .coin-row:hover { border-left-color: var(--defi); }
+  .card-defi::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(180,93,232,0.03) 0%, transparent 60%); pointer-events: none; }
+
+  .card-meme .card-glow { background: var(--meme); }
+  .card-meme .card-badge { color: var(--meme); border: 1px solid rgba(232,93,156,0.3); background: rgba(232,93,156,0.1); }
+  .card-meme .coin-row:hover { border-left-color: var(--meme); }
+  .card-meme::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(232,93,156,0.03) 0%, transparent 60%); pointer-events: none; }
+
+  .card-cbdc .card-glow { background: var(--cbdc); }
+  .card-cbdc .card-badge { color: var(--cbdc); border: 1px solid rgba(93,232,232,0.3); background: rgba(93,232,232,0.1); }
+  .card-cbdc .coin-row:hover { border-left-color: var(--cbdc); }
+  .card-cbdc::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(93,232,232,0.03) 0%, transparent 60%); pointer-events: none; }
+
+  .card-nft .card-glow { background: var(--nft); }
+  .card-nft .card-badge { color: var(--nft); border: 1px solid rgba(232,160,47,0.3); background: rgba(232,160,47,0.1); }
+  .card-nft .coin-row:hover { border-left-color: var(--nft); }
+  .card-nft::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(232,160,47,0.03) 0%, transparent 60%); pointer-events: none; }
+
+  .card-algo .card-glow { background: var(--algo); }
+  .card-algo .card-badge { color: var(--algo); border: 1px solid rgba(93,156,232,0.3); background: rgba(93,156,232,0.1); }
+  .card-algo .coin-row:hover { border-left-color: var(--algo); }
+  .card-algo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(93,156,232,0.03) 0%, transparent 60%); pointer-events: none; }
+
+  /* ── COMPARISON TABLE ── */
+  .comparison-section {
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.5s;
+  }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 11px;
+  }
+
+  .compare-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 12px 16px;
+    background: rgba(201,168,76,0.05);
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-weight: 400;
+  }
+
+  .compare-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .compare-table tr:hover td {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .tbl-type {
+    font-weight: 500;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tbl-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .energy-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .energy-track {
+    width: 80px;
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .energy-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .pill-green { background: rgba(47,232,168,0.12); color: var(--pos); border: 1px solid rgba(47,232,168,0.25); }
+  .pill-red { background: rgba(232,93,47,0.12); color: var(--pow); border: 1px solid rgba(232,93,47,0.25); }
+  .pill-yellow { background: rgba(232,212,47,0.12); color: var(--stable); border: 1px solid rgba(232,212,47,0.25); }
+  .pill-blue { background: rgba(93,156,232,0.12); color: var(--algo); border: 1px solid rgba(93,156,232,0.25); }
+  .pill-purple { background: rgba(180,93,232,0.12); color: var(--defi); border: 1px solid rgba(180,93,232,0.25); }
+  .pill-gray { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border); }
+
+  /* ── TIMELINE ── */
+  .timeline-section {
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.6s;
+  }
+
+  .timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), var(--border), transparent);
+    transform: translateY(-50%);
+  }
+
+  .timeline-items {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .tl-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .tl-item:nth-child(odd) {
+    flex-direction: column;
+    padding-bottom: 0;
+  }
+
+  .tl-item:nth-child(odd) .tl-content {
+    order: -1;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .tl-item:nth-child(even) .tl-content {
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .tl-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--panel);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tl-content {
+    padding: 0 8px;
+  }
+
+  .tl-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  .tl-event {
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 40px 0 20px;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.8s;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .pulse { animation: pulse 2s ease infinite; }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .methods-grid { grid-template-columns: repeat(2, 1fr); }
+    .taxonomy-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 700px) {
+    .methods-grid { grid-template-columns: 1fr; }
+    .taxonomy-grid { grid-template-columns: 1fr; }
+    .timeline-items { grid-template-columns: repeat(4, 1fr); }
+    .container { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+<!-- DIAGONAL WATERMARK -->
+<div class="watermark-diagonal"></div>
+
+<!-- CORNER STAMP WATERMARK -->
+<div class="watermark-corner">
+  <div class="wm-name">Sky Sharma</div>
+  <div class="wm-title">CISO & Cyber Leader<br>Cognitive Innovator<br>AI, Quantum & Data Ethics Expert<br>Driving Global Impact</div>
+</div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-eyebrow">Digital Asset Intelligence Report</div>
+    <h1>CRYPTO<span>CURRENCY</span></h1>
+    <div class="header-sub">A comprehensive taxonomy of digital assets and their creation mechanisms</div>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--pow)"></div>Proof of Work</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--pos)"></div>Proof of Stake</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--algo)"></div>Algorithmic</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--stable)"></div>Collateral-Backed</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--defi)"></div>Smart Contract</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--cbdc)"></div>Central Issuance</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--meme)"></div>Fair Launch</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--nft)"></div>Minting</div>
+  </div>
+
+  <!-- CREATION MECHANISMS -->
+  <section class="creation-flow">
+    <div class="section-label">01 — Creation Mechanisms</div>
+    <div class="methods-grid">
+
+      <!-- PROOF OF WORK -->
+      <div class="method-block pow">
+        <span class="method-icon">⛏</span>
+        <div class="method-name">Proof of Work</div>
+        <span class="method-tag">Mining</span>
+        <p class="method-desc">Nodes compete to solve computationally intensive cryptographic puzzles (SHA-256, Scrypt, Ethash). The winner broadcasts the valid block and receives newly minted coins as a block reward. Difficulty adjusts dynamically to maintain target block intervals.</p>
+        <div class="method-metrics">
+          <div class="metric">
+            <div class="metric-label">Energy Use</div>
+            <div class="metric-value" style="color:var(--pow)">Very High</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Decentralization</div>
+            <div class="metric-value" style="color:var(--pos)">High</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Security</div>
+            <div class="metric-value" style="color:var(--pos)">Maximum</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Barrier to Entry</div>
+            <div class="metric-value" style="color:var(--pow)">ASIC/GPU</div>
+          </div>
+        </div>
+        <div class="method-examples">
+          <span class="ex-tag">BTC</span>
+          <span class="ex-tag">LTC</span>
+          <span class="ex-tag">XMR</span>
+          <span class="ex-tag">DOGE</span>
+          <span class="ex-tag">ZEC</span>
+        </div>
+      </div>
+
+      <!-- PROOF OF STAKE -->
+      <div class="method-block pos">
+        <span class="method-icon">🔒</span>
+        <div class="method-name">Proof of Stake</div>
+        <span class="method-tag">Staking / Validation</span>
+        <p class="method-desc">Validators lock (stake) existing tokens as collateral to gain the right to propose and attest to new blocks. New coins are issued as staking rewards proportional to stake size. Slashing penalizes dishonest validators by destroying staked tokens.</p>
+        <div class="method-metrics">
+          <div class="metric">
+            <div class="metric-label">Energy Use</div>
+            <div class="metric-value" style="color:var(--pos)">Very Low</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Decentralization</div>
+            <div class="metric-value" style="color:var(--stable)">Medium</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Security</div>
+            <div class="metric-value" style="color:var(--pos)">High</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Barrier to Entry</div>
+            <div class="metric-value" style="color:var(--pos)">32 ETH Min</div>
+          </div>
+        </div>
+        <div class="method-examples">
+          <span class="ex-tag">ETH</span>
+          <span class="ex-tag">SOL</span>
+          <span class="ex-tag">ADA</span>
+          <span class="ex-tag">DOT</span>
+          <span class="ex-tag">AVAX</span>
+        </div>
+      </div>
+
+      <!-- ALGORITHMIC / PRE-MINED -->
+      <div class="method-block algo">
+        <span class="method-icon">⚙️</span>
+        <div class="method-name">Algorithmic Issuance</div>
+        <span class="method-tag">Pre-Mined / Programmatic</span>
+        <p class="method-desc">Supply is minted entirely at genesis (pre-mine) or released on a programmatic schedule via smart contracts — no energy-intensive consensus required. Tokens are distributed via ICO, TGE, airdrops, liquidity incentives, or governance treasury allocations.</p>
+        <div class="method-metrics">
+          <div class="metric">
+            <div class="metric-label">Energy Use</div>
+            <div class="metric-value" style="color:var(--pos)">Minimal</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Decentralization</div>
+            <div class="metric-value" style="color:var(--pow)">Variable</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Security</div>
+            <div class="metric-value" style="color:var(--stable)">Contract Risk</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Barrier to Entry</div>
+            <div class="metric-value" style="color:var(--pos)">None</div>
+          </div>
+        </div>
+        <div class="method-examples">
+          <span class="ex-tag">XRP</span>
+          <span class="ex-tag">XLM</span>
+          <span class="ex-tag">BNB</span>
+          <span class="ex-tag">LINK</span>
+          <span class="ex-tag">UNI</span>
+        </div>
+      </div>
+
+      <!-- COLLATERAL / CENTRAL ISSUANCE -->
+      <div class="method-block issued">
+        <span class="method-icon">🏦</span>
+        <div class="method-name">Collateral Issuance</div>
+        <span class="method-tag">Backed / Central Mint</span>
+        <p class="method-desc">New tokens are minted 1:1 against deposited collateral (fiat, crypto, or government backing). Issuers maintain reserves and can mint/burn tokens to maintain peg. CBDCs are centrally issued by sovereign banks with full monetary policy control.</p>
+        <div class="method-metrics">
+          <div class="metric">
+            <div class="metric-label">Energy Use</div>
+            <div class="metric-value" style="color:var(--pos)">Negligible</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Decentralization</div>
+            <div class="metric-value" style="color:var(--pow)">Centralized</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Security</div>
+            <div class="metric-value" style="color:var(--stable)">Custodial</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Barrier to Entry</div>
+            <div class="metric-value" style="color:var(--pow)">Regulated</div>
+          </div>
+        </div>
+        <div class="method-examples">
+          <span class="ex-tag">USDT</span>
+          <span class="ex-tag">USDC</span>
+          <span class="ex-tag">DAI</span>
+          <span class="ex-tag">PYUSD</span>
+          <span class="ex-tag">e-CNY</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TAXONOMY CARDS -->
+  <section>
+    <div class="section-label" style="opacity:0;animation:fadeUp 0.8s ease forwards 1.2s">02 — Asset Taxonomy</div>
+    <div class="taxonomy-grid">
+
+      <!-- NATIVE COINS (PoW) -->
+      <div class="crypto-card card-pow">
+        <div class="card-header">
+          <div class="card-glow"></div>
+          <div class="card-symbol">⛏</div>
+          <div class="card-type">Layer 1 Coins</div>
+          <div class="card-subtitle">Proof-of-Work Native Currency</div>
+          <span class="card-badge">Mined</span>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">The original cryptocurrency model. Native blockchain currencies secured by computational work. The blockchain IS the ledger; miners compete to extend it and earn block rewards.</p>
+          <div class="card-creation">
+            <div class="card-creation-label">How they're created</div>
+            <div class="card-creation-text">Miners run ASICs/GPUs solving SHA-256 or Scrypt hashing. Valid block found → broadcast to network → block reward issued + transaction fees collected. Supply curve is fixed in protocol code (e.g., Bitcoin halving every 210,000 blocks).</div>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--pow)">21M</span>
+              <span class="stat-lbl">BTC Supply</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--pow)">~10m</span>
+              <span class="stat-lbl">Block Time</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--pow)">2140</span>
+              <span class="stat-lbl">Last BTC</span>
+            </div>
+          </div>
+          <div class="coin-examples">
+            <div class="coin-row"><span class="coin-name">Bitcoin (BTC)</span><span class="coin-detail">SHA-256 · ASIC</span></div>
+            <div class="coin-row"><span class="coin-name">Litecoin (LTC)</span><span class="coin-detail">Scrypt · ASIC</span></div>
+            <div class="coin-row"><span class="coin-name">Monero (XMR)</span><span class="coin-detail">RandomX · CPU</span></div>
+            <div class="coin-row"><span class="coin-name">Zcash (ZEC)</span><span class="coin-detail">Equihash · zk-SNARK</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SMART CONTRACT PLATFORMS (PoS) -->
+      <div class="crypto-card card-pos">
+        <div class="card-header">
+          <div class="card-glow"></div>
+          <div class="card-symbol">🔗</div>
+          <div class="card-type">Smart Contract Platforms</div>
+          <div class="card-subtitle">Proof-of-Stake Layer 1 & 2</div>
+          <span class="card-badge">Staked</span>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">Programmable blockchains that host decentralized applications. Native tokens serve as gas fuel, staking collateral, and governance rights. Validators earn staking yields rather than mining rewards.</p>
+          <div class="card-creation">
+            <div class="card-creation-label">How they're created</div>
+            <div class="card-creation-text">Validators stake minimum collateral (e.g., 32 ETH) to join validator set. Randomly selected to propose blocks; committees attest. New ETH minted as issuance reward (~0.5% annually). EIP-1559 burns base fees, making ETH deflationary during high activity.</div>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--pos)">~12s</span>
+              <span class="stat-lbl">ETH Slot</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--pos)">32</span>
+              <span class="stat-lbl">ETH Stake</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--pos)">∞</span>
+              <span class="stat-lbl">ETH Supply</span>
+            </div>
+          </div>
+          <div class="coin-examples">
+            <div class="coin-row"><span class="coin-name">Ethereum (ETH)</span><span class="coin-detail">Gasper · Casper FFG</span></div>
+            <div class="coin-row"><span class="coin-name">Solana (SOL)</span><span class="coin-detail">PoH + Tower BFT</span></div>
+            <div class="coin-row"><span class="coin-name">Cardano (ADA)</span><span class="coin-detail">Ouroboros PoS</span></div>
+            <div class="coin-row"><span class="coin-name">Avalanche (AVAX)</span><span class="coin-detail">Snowman · Subnet</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STABLECOINS -->
+      <div class="crypto-card card-stable">
+        <div class="card-header">
+          <div class="card-glow"></div>
+          <div class="card-symbol">⚖️</div>
+          <div class="card-type">Stablecoins</div>
+          <div class="card-subtitle">Pegged Value Digital Assets</div>
+          <span class="card-badge">Collateral-Backed</span>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">Cryptocurrencies engineered to maintain a stable price peg, typically to USD. Three distinct architectures: fiat-backed, crypto-backed, and algorithmic. The stability mechanism defines risk profile and decentralization.</p>
+          <div class="card-creation">
+            <div class="card-creation-label">How they're created</div>
+            <div class="card-creation-text">Fiat-backed: Deposit $1 USD with custodian → smart contract mints 1 USDC. Crypto-backed: Lock $150 ETH → mint 100 DAI (over-collateralized). Algorithmic: Protocol expands/contracts supply via seigniorage to maintain peg (high-risk).</div>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--stable)">$1.00</span>
+              <span class="stat-lbl">Target Peg</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--stable)">150%</span>
+              <span class="stat-lbl">DAI Collat.</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--stable)">$180B+</span>
+              <span class="stat-lbl">Market Cap</span>
+            </div>
+          </div>
+          <div class="coin-examples">
+            <div class="coin-row"><span class="coin-name">Tether (USDT)</span><span class="coin-detail">Fiat-backed · Centralized</span></div>
+            <div class="coin-row"><span class="coin-name">USDC</span><span class="coin-detail">Fiat-backed · Regulated</span></div>
+            <div class="coin-row"><span class="coin-name">DAI</span><span class="coin-detail">Crypto-backed · MakerDAO</span></div>
+            <div class="coin-row"><span class="coin-name">FRAX</span><span class="coin-detail">Fractional-algorithmic</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DeFi TOKENS -->
+      <div class="crypto-card card-defi">
+        <div class="card-header">
+          <div class="card-glow"></div>
+          <div class="card-symbol">🔄</div>
+          <div class="card-type">DeFi Tokens</div>
+          <div class="card-subtitle">Decentralized Finance Governance</div>
+          <span class="card-badge">Smart Contract</span>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">Tokens that govern decentralized financial protocols — DEXs, lending markets, yield optimizers. Created via token generation events (TGE), liquidity mining, or DAO treasury allocations. Confer voting rights over protocol parameters.</p>
+          <div class="card-creation">
+            <div class="card-creation-label">How they're created</div>
+            <div class="card-creation-text">Genesis mint at protocol launch → distributed via liquidity mining (provide LP → earn tokens), protocol fee sharing, contributor grants, or governance-approved emissions schedule. Smart contract enforces vesting/lockup periods for team allocations.</div>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--defi)">1B</span>
+              <span class="stat-lbl">UNI Supply</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--defi)">$180B+</span>
+              <span class="stat-lbl">DeFi TVL</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--defi)">DAO</span>
+              <span class="stat-lbl">Governance</span>
+            </div>
+          </div>
+          <div class="coin-examples">
+            <div class="coin-row"><span class="coin-name">Uniswap (UNI)</span><span class="coin-detail">DEX governance · Airdrop</span></div>
+            <div class="coin-row"><span class="coin-name">Aave (AAVE)</span><span class="coin-detail">Lending · Safety module</span></div>
+            <div class="coin-row"><span class="coin-name">Compound (COMP)</span><span class="coin-detail">Lending · Yield farming</span></div>
+            <div class="coin-row"><span class="coin-name">Curve (CRV)</span><span class="coin-detail">Stablecoin AMM · veToken</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEME COINS -->
+      <div class="crypto-card card-meme">
+        <div class="card-header">
+          <div class="card-glow"></div>
+          <div class="card-symbol">🐕</div>
+          <div class="card-type">Meme Coins</div>
+          <div class="card-subtitle">Community & Culture Tokens</div>
+          <span class="card-badge">Fair Launch</span>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">Cryptocurrencies driven by internet culture, social momentum, and community identity rather than fundamental utility. Often launched with no pre-mine and unlimited or enormous supply. Value is purely speculative and community-driven.</p>
+          <div class="card-creation">
+            <div class="card-creation-label">How they're created</div>
+            <div class="card-creation-text">Either forked from existing chains (DOGE from LTC/BTC codebase, PoW mined) or deployed as ERC-20/SPL tokens via simple smart contract with no venture backing. "Fair launch" means no pre-sale — all supply available to public at genesis. Pump.fun enables 30-second launches on Solana.</div>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--meme)">∞</span>
+              <span class="stat-lbl">DOGE Supply</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--meme)">589T</span>
+              <span class="stat-lbl">SHIB Supply</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--meme)">~30s</span>
+              <span class="stat-lbl">Launch Time</span>
+            </div>
+          </div>
+          <div class="coin-examples">
+            <div class="coin-row"><span class="coin-name">Dogecoin (DOGE)</span><span class="coin-detail">PoW fork · Scrypt</span></div>
+            <div class="coin-row"><span class="coin-name">Shiba Inu (SHIB)</span><span class="coin-detail">ERC-20 · Uniswap launch</span></div>
+            <div class="coin-row"><span class="coin-name">Pepe (PEPE)</span><span class="coin-detail">ERC-20 · Fair launch</span></div>
+            <div class="coin-row"><span class="coin-name">WIF / BONK</span><span class="coin-detail">SPL · Pump.fun / airdrop</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CBDC -->
+      <div class="crypto-card card-cbdc">
+        <div class="card-header">
+          <div class="card-glow"></div>
+          <div class="card-symbol">🏛</div>
+          <div class="card-type">CBDCs</div>
+          <div class="card-subtitle">Central Bank Digital Currencies</div>
+          <span class="card-badge">Central Issuance</span>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">Sovereign digital currencies issued directly by central banks. Legal tender in digital form — neither decentralized nor permissionless. Programmed with monetary policy rules, KYC/AML enforcement, and potential expiry/spending restrictions.</p>
+          <div class="card-creation">
+            <div class="card-creation-label">How they're created</div>
+            <div class="card-creation-text">Central bank operates a permissioned ledger (DLT or centralized DB). New units minted by monetary authority decree — backed by sovereign credit. Distributed to commercial banks and consumers via regulated intermediaries. Supply fully controlled by government mandate.</div>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--cbdc)">130+</span>
+              <span class="stat-lbl">Countries</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--cbdc)">3</span>
+              <span class="stat-lbl">Live CBDCs</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--cbdc)">100%</span>
+              <span class="stat-lbl">Centralized</span>
+            </div>
+          </div>
+          <div class="coin-examples">
+            <div class="coin-row"><span class="coin-name">Digital Yuan (e-CNY)</span><span class="coin-detail">PBOC · Permissioned DLT</span></div>
+            <div class="coin-row"><span class="coin-name">DCash (XCD)</span><span class="coin-detail">Eastern Caribbean · Live</span></div>
+            <div class="coin-row"><span class="coin-name">Digital Rupee (e₹)</span><span class="coin-detail">RBI · Pilot phase</span></div>
+            <div class="coin-row"><span class="coin-name">Digital Euro</span><span class="coin-detail">ECB · Development phase</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UTILITY / PLATFORM TOKENS -->
+      <div class="crypto-card card-algo">
+        <div class="card-header">
+          <div class="card-glow"></div>
+          <div class="card-symbol">⚡</div>
+          <div class="card-type">Utility Tokens</div>
+          <div class="card-subtitle">Platform Access & Gas Tokens</div>
+          <span class="card-badge">Algorithmic</span>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">Tokens with specific in-protocol utility: paying transaction fees, accessing services, incentivizing node operators, or representing computational resources. Often pre-mined at launch and released via vesting schedules or ecosystem incentives.</p>
+          <div class="card-creation">
+            <div class="card-creation-label">How they're created</div>
+            <div class="card-creation-text">Pre-mined at genesis block with allocation between team, investors, foundation, and ecosystem fund. Released per published vesting schedule enforced by smart contracts. New supply may be minted as node rewards (e.g., Chainlink node payments drawn from treasury or user fees).</div>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--algo)">100B</span>
+              <span class="stat-lbl">XRP Supply</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--algo)">1B</span>
+              <span class="stat-lbl">LINK Supply</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--algo)">TGE</span>
+              <span class="stat-lbl">Distribution</span>
+            </div>
+          </div>
+          <div class="coin-examples">
+            <div class="coin-row"><span class="coin-name">Ripple (XRP)</span><span class="coin-detail">Pre-mined · Escrow release</span></div>
+            <div class="coin-row"><span class="coin-name">Chainlink (LINK)</span><span class="coin-detail">ERC-677 · Oracle incentive</span></div>
+            <div class="coin-row"><span class="coin-name">Filecoin (FIL)</span><span class="coin-detail">PoSt · Storage mining</span></div>
+            <div class="coin-row"><span class="coin-name">Hedera (HBAR)</span><span class="coin-detail">Hashgraph · Treasury drip</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NFT / GAMING TOKENS -->
+      <div class="crypto-card card-nft">
+        <div class="card-header">
+          <div class="card-glow"></div>
+          <div class="card-symbol">🎨</div>
+          <div class="card-type">NFT & Gaming Tokens</div>
+          <div class="card-subtitle">Non-Fungible & In-Game Assets</div>
+          <span class="card-badge">Minting</span>
+        </div>
+        <div class="card-body">
+          <p class="card-desc">Non-fungible tokens represent unique digital ownership — art, collectibles, virtual land, game items, and intellectual property rights. Gaming tokens (fungible) serve as in-game currency within play-to-earn ecosystems, minted as player rewards.</p>
+          <div class="card-creation">
+            <div class="card-creation-label">How they're created</div>
+            <div class="card-creation-text">NFTs: Creator calls mint() on ERC-721/ERC-1155 contract, metadata stored on IPFS or Arweave. Each token receives unique tokenID. Gaming tokens: Minted by game protocol as rewards for gameplay milestones. Supply may be inflationary (earn-to-circulate) or capped by governance vote.</div>
+          </div>
+          <div class="card-stats">
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--nft)">10K</span>
+              <span class="stat-lbl">BAYC Supply</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--nft)">ERC-721</span>
+              <span class="stat-lbl">NFT Standard</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val" style="color:var(--nft)">IPFS</span>
+              <span class="stat-lbl">Metadata</span>
+            </div>
+          </div>
+          <div class="coin-examples">
+            <div class="coin-row"><span class="coin-name">ApeCoin (APE)</span><span class="coin-detail">ERC-20 · BAYC ecosystem</span></div>
+            <div class="coin-row"><span class="coin-name">Axie Infinity (AXS)</span><span class="coin-detail">ERC-20 · P2E governance</span></div>
+            <div class="coin-row"><span class="coin-name">Decentraland (MANA)</span><span class="coin-detail">ERC-20 · Virtual land</span></div>
+            <div class="coin-row"><span class="coin-name">SAND (Sandbox)</span><span class="coin-detail">ERC-20 · Metaverse</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="comparison-section">
+    <div class="section-label">03 — Comparative Analysis</div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width:180px">Asset Type</th>
+          <th>Creation Method</th>
+          <th>Energy Use</th>
+          <th>Decentralization</th>
+          <th>Supply Control</th>
+          <th>Primary Risk</th>
+          <th>Regulatory Stance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="tbl-type"><div class="tbl-dot" style="background:var(--pow)"></div>PoW Coins</div></td>
+          <td>Competitive Mining (SHA-256/Scrypt)</td>
+          <td>
+            <div class="energy-bar">
+              <div class="energy-track"><div class="energy-fill" style="width:95%;background:var(--pow)"></div></div>
+              <span style="font-size:10px;color:var(--pow)">Extreme</span>
+            </div>
+          </td>
+          <td><span class="pill pill-green">Very High</span></td>
+          <td>Protocol Hard Cap</td>
+          <td>51% Attack, ASIC Centralization</td>
+          <td><span class="pill pill-blue">Commodity</span></td>
+        </tr>
+        <tr>
+          <td><div class="tbl-type"><div class="tbl-dot" style="background:var(--pos)"></div>PoS Platforms</div></td>
+          <td>Validator Staking Rewards</td>
+          <td>
+            <div class="energy-bar">
+              <div class="energy-track"><div class="energy-fill" style="width:5%;background:var(--pos)"></div></div>
+              <span style="font-size:10px;color:var(--pos)">Minimal</span>
+            </div>
+          </td>
+          <td><span class="pill pill-green">High</span></td>
+          <td>Issuance Rate + Burn</td>
+          <td>Stake Concentration, Slashing</td>
+          <td><span class="pill pill-yellow">Evolving</span></td>
+        </tr>
+        <tr>
+          <td><div class="tbl-type"><div class="tbl-dot" style="background:var(--stable)"></div>Stablecoins</div></td>
+          <td>Mint/Burn vs. Collateral</td>
+          <td>
+            <div class="energy-bar">
+              <div class="energy-track"><div class="energy-fill" style="width:2%;background:var(--stable)"></div></div>
+              <span style="font-size:10px;color:var(--pos)">Negligible</span>
+            </div>
+          </td>
+          <td><span class="pill pill-red">Low–Centralized</span></td>
+          <td>Collateral Ratio</td>
+          <td>De-peg, Reserve Fraud, Algo Collapse</td>
+          <td><span class="pill pill-red">High Scrutiny</span></td>
+        </tr>
+        <tr>
+          <td><div class="tbl-type"><div class="tbl-dot" style="background:var(--defi)"></div>DeFi Tokens</div></td>
+          <td>Liquidity Mining / TGE</td>
+          <td>
+            <div class="energy-bar">
+              <div class="energy-track"><div class="energy-fill" style="width:3%;background:var(--algo)"></div></div>
+              <span style="font-size:10px;color:var(--pos)">Low</span>
+            </div>
+          </td>
+          <td><span class="pill pill-purple">DAO-Governed</span></td>
+          <td>Governance Vote</td>
+          <td>Smart Contract Bug, Governance Attack</td>
+          <td><span class="pill pill-yellow">Securities Risk</span></td>
+        </tr>
+        <tr>
+          <td><div class="tbl-type"><div class="tbl-dot" style="background:var(--meme)"></div>Meme Coins</div></td>
+          <td>PoW Fork / Fair Launch ERC-20</td>
+          <td>
+            <div class="energy-bar">
+              <div class="energy-track"><div class="energy-fill" style="width:15%;background:var(--meme)"></div></div>
+              <span style="font-size:10px;color:var(--muted)">Varies</span>
+            </div>
+          </td>
+          <td><span class="pill pill-green">High (typically)</span></td>
+          <td>None / Infinite</td>
+          <td>Rug Pull, Whale Dumps, Social Risk</td>
+          <td><span class="pill pill-gray">Unclassified</span></td>
+        </tr>
+        <tr>
+          <td><div class="tbl-type"><div class="tbl-dot" style="background:var(--cbdc)"></div>CBDCs</div></td>
+          <td>Central Bank Mandate</td>
+          <td>
+            <div class="energy-bar">
+              <div class="energy-track"><div class="energy-fill" style="width:1%;background:var(--cbdc)"></div></div>
+              <span style="font-size:10px;color:var(--pos)">Near Zero</span>
+            </div>
+          </td>
+          <td><span class="pill pill-red">Fully Centralized</span></td>
+          <td>Government Policy</td>
+          <td>Surveillance, Programmable Controls</td>
+          <td><span class="pill pill-green">Government-Issued</span></td>
+        </tr>
+        <tr>
+          <td><div class="tbl-type"><div class="tbl-dot" style="background:var(--algo)"></div>Utility Tokens</div></td>
+          <td>Pre-Mine + Vesting Release</td>
+          <td>
+            <div class="energy-bar">
+              <div class="energy-track"><div class="energy-fill" style="width:4%;background:var(--algo)"></div></div>
+              <span style="font-size:10px;color:var(--pos)">Very Low</span>
+            </div>
+          </td>
+          <td><span class="pill pill-yellow">Mixed</span></td>
+          <td>Vesting Schedule</td>
+          <td>Team Dump, Inflation, Utility Loss</td>
+          <td><span class="pill pill-yellow">Securities Risk</span></td>
+        </tr>
+        <tr>
+          <td><div class="tbl-type"><div class="tbl-dot" style="background:var(--nft)"></div>NFT Tokens</div></td>
+          <td>Smart Contract Minting</td>
+          <td>
+            <div class="energy-bar">
+              <div class="energy-track"><div class="energy-fill" style="width:3%;background:var(--nft)"></div></div>
+              <span style="font-size:10px;color:var(--pos)">Low</span>
+            </div>
+          </td>
+          <td><span class="pill pill-green">High</span></td>
+          <td>Creator-Defined Cap</td>
+          <td>Market Illiquidity, Metadata Loss</td>
+          <td><span class="pill pill-gray">Unclassified</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="timeline-section">
+    <div class="section-label">04 — Evolution Timeline</div>
+    <div class="timeline">
+      <div class="timeline-items">
+        <div class="tl-item">
+          <div class="tl-content">
+            <div class="tl-year">2009</div>
+            <div class="tl-event">Bitcoin Genesis Block · PoW Era Begins</div>
+          </div>
+          <div class="tl-dot" style="background:var(--pow);box-shadow:0 0 10px var(--pow)"></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--algo);box-shadow:0 0 10px var(--algo)"></div>
+          <div class="tl-content">
+            <div class="tl-year">2012</div>
+            <div class="tl-event">Ripple XRP · First Issued Token</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-content">
+            <div class="tl-year">2015</div>
+            <div class="tl-event">Ethereum · Smart Contracts Launch</div>
+          </div>
+          <div class="tl-dot" style="background:var(--pos);box-shadow:0 0 10px var(--pos)"></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--stable);box-shadow:0 0 10px var(--stable)"></div>
+          <div class="tl-content">
+            <div class="tl-year">2017</div>
+            <div class="tl-event">USDT on Ethereum · Stablecoin Boom</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-content">
+            <div class="tl-year">2020</div>
+            <div class="tl-event">DeFi Summer · Liquidity Mining</div>
+          </div>
+          <div class="tl-dot" style="background:var(--defi);box-shadow:0 0 10px var(--defi)"></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--nft);box-shadow:0 0 10px var(--nft)"></div>
+          <div class="tl-content">
+            <div class="tl-year">2021</div>
+            <div class="tl-event">NFT Explosion · Minting Mainstream</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-content">
+            <div class="tl-year">2022</div>
+            <div class="tl-event">ETH Merge · PoW → PoS Migration</div>
+          </div>
+          <div class="tl-dot" style="background:var(--pos);box-shadow:0 0 10px var(--pos)"></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:var(--cbdc);box-shadow:0 0 10px var(--cbdc)"></div>
+          <div class="tl-content">
+            <div class="tl-year">2024+</div>
+            <div class="tl-event">CBDC Pilots · Spot ETF Approval</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:4px;margin-bottom:16px">DIGITAL ASSET TAXONOMY</div>
+
+    <!-- Sky Sharma Footer Brand -->
+    <div style="
+      display:inline-block;
+      border:1px solid rgba(201,168,76,0.25);
+      padding:16px 36px;
+      margin-bottom:18px;
+      position:relative;
+      background:rgba(201,168,76,0.03);
+    ">
+      <div style="
+        position:absolute;
+        top:-1px; left:20px; right:20px;
+        height:2px;
+        background:linear-gradient(90deg, transparent, var(--gold), transparent);
+      "></div>
+      <div style="
+        font-family:'Bebas Neue',sans-serif;
+        font-size:26px;
+        letter-spacing:5px;
+        color:var(--gold-light);
+        margin-bottom:4px;
+        line-height:1;
+      ">Sky Sharma</div>
+      <div style="
+        font-family:'DM Mono',monospace;
+        font-size:9px;
+        letter-spacing:2.5px;
+        color:rgba(201,168,76,0.55);
+        text-transform:uppercase;
+        line-height:2;
+      ">
+        CISO &amp; Cyber Leader &nbsp;·&nbsp; Cognitive Innovator &nbsp;·&nbsp; AI, Quantum &amp; Data Ethics Expert &nbsp;·&nbsp; Driving Global Impact
+      </div>
+      <div style="
+        position:absolute;
+        bottom:-1px; left:20px; right:20px;
+        height:2px;
+        background:linear-gradient(90deg, transparent, var(--gold), transparent);
+      "></div>
+    </div>
+
+    <div style="font-size:10px;letter-spacing:2px;color:var(--muted)">
+      For informational and educational purposes only &nbsp;·&nbsp; Not financial advice &nbsp;·&nbsp; Market data approximate
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
