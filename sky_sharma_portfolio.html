@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sky Sharma — CISO & Cybersecurity Executive Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:     #040810;
+  --deep:      #070c18;
+  --surface:   #0b1422;
+  --card:      #0f1b30;
+  --card2:     #121f36;
+  --border:    rgba(0,180,255,0.10);
+  --gold:      #c9a84c;
+  --gold-lt:   rgba(201,168,76,0.70);
+  --gold-dim:  rgba(201,168,76,0.35);
+  --gold-faint:rgba(201,168,76,0.08);
+  --gold-glow: rgba(201,168,76,0.15);
+  --cyan:      #00b4ff;
+  --cyan-dim:  rgba(0,180,255,0.18);
+  --teal:      #00e5cc;
+  --violet:    #9b5cff;
+  --red:       #ff4757;
+  --orange:    #ff8c42;
+  --green:     #00e676;
+  --blue:      #448aff;
+  --text:      #ccd8f0;
+  --muted:     rgba(160,185,230,0.45);
+  --line:      rgba(0,180,255,0.08);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── GRID BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,180,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,180,255,0.025) 1px, transparent 1px);
+  background-size: 52px 52px;
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed; top: -20%; left: 50%;
+  transform: translateX(-50%);
+  width: 160vw; height: 70vh;
+  background: radial-gradient(ellipse, rgba(0,80,200,0.07) 0%, transparent 68%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── DIAGONAL WATERMARK ── */
+.wm-diagonal {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 999; overflow: hidden;
+}
+.wm-diagonal::before {
+  content: 'SKY SHARMA · CISO & CYBER LEADER · SKY SHARMA · CISO & CYBER LEADER · SKY SHARMA · CISO & CYBER LEADER · SKY SHARMA ·';
+  position: absolute; top: 48%; left: 50%;
+  transform: translate(-50%,-50%) rotate(-32deg);
+  white-space: nowrap;
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 5px; color: rgba(201,168,76,0.042);
+  text-transform: uppercase; width: 290%; text-align: center; line-height: 1;
+}
+.wm-diagonal::after {
+  content: 'AI · QUANTUM · DATA ETHICS · COGNITIVE INNOVATOR · DRIVING GLOBAL IMPACT · AI · QUANTUM · DATA ETHICS · COGNITIVE INNOVATOR ·';
+  position: absolute; top: calc(48% + 58px); left: 50%;
+  transform: translate(-50%,-50%) rotate(-32deg);
+  white-space: nowrap;
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 5px; color: rgba(201,168,76,0.028);
+  text-transform: uppercase; width: 290%; text-align: center; line-height: 1;
+}
+
+/* ── CORNER STAMP ── */
+.wm-corner {
+  position: fixed; bottom: 28px; right: 30px;
+  z-index: 1000; pointer-events: none;
+  text-align: right;
+  border-right: 2px solid rgba(201,168,76,0.30);
+  padding-right: 12px;
+}
+.wm-corner-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px; letter-spacing: 3px;
+  color: rgba(201,168,76,0.60); line-height: 1; margin-bottom: 4px;
+}
+.wm-corner-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px; letter-spacing: 1.5px;
+  color: rgba(201,168,76,0.30);
+  text-transform: uppercase; line-height: 1.8; max-width: 220px;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 900;
+  background: rgba(4,8,16,0.85);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+}
+.nav-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px; letter-spacing: 4px; color: var(--gold-lt);
+}
+.nav-links {
+  display: flex; gap: 28px; list-style: none;
+}
+.nav-links a {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; color: var(--muted);
+  text-decoration: none; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--cyan); }
+
+/* ── LAYOUT ── */
+.page { position: relative; z-index: 1; max-width: 1440px; margin: 0 auto; padding: 0 40px 80px; }
+
+/* ── HERO ── */
+.hero {
+  padding: 130px 0 70px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center;
+}
+.hero-left {}
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 4px; color: var(--cyan); text-transform: uppercase;
+  margin-bottom: 16px; opacity: 0.8;
+}
+.hero-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900; letter-spacing: 3px;
+  line-height: 1;
+  background: linear-gradient(135deg, #fff 0%, var(--cyan) 45%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 8px;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(18px, 2.5vw, 28px);
+  letter-spacing: 5px; color: var(--gold-lt);
+  margin-bottom: 24px;
+}
+.hero-desc {
+  color: var(--muted); font-size: 15px; line-height: 1.7;
+  max-width: 520px; margin-bottom: 36px;
+}
+.hero-badges {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px;
+}
+.badge {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--cyan); border-radius: 2px;
+}
+.badge.gold { border-color: var(--gold-dim); color: var(--gold-lt); background: var(--gold-faint); }
+.badge.teal { border-color: rgba(0,229,204,0.2); color: var(--teal); }
+.badge.violet { border-color: rgba(155,92,255,0.2); color: var(--violet); }
+.badge.green { border-color: rgba(0,230,118,0.2); color: var(--green); }
+
+.hero-cta {
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+.btn {
+  font-family: 'Rajdhani', sans-serif; font-weight: 600;
+  font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 12px 28px; border-radius: 2px; cursor: pointer;
+  text-decoration: none; transition: all 0.25s; display: inline-block;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan), #0060aa);
+  color: #fff; border: none;
+  box-shadow: 0 0 20px rgba(0,180,255,0.25);
+}
+.btn-primary:hover { box-shadow: 0 0 30px rgba(0,180,255,0.45); transform: translateY(-2px); }
+.btn-outline {
+  background: transparent; color: var(--gold-lt);
+  border: 1px solid var(--gold-dim);
+}
+.btn-outline:hover { background: var(--gold-faint); border-color: var(--gold); }
+
+/* Hero Right: Stat Cards */
+.hero-right {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 24px 20px;
+  position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+}
+.stat-card.c1::before { background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+.stat-card.c2::before { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.stat-card.c3::before { background: linear-gradient(90deg, transparent, var(--teal), transparent); }
+.stat-card.c4::before { background: linear-gradient(90deg, transparent, var(--violet), transparent); }
+.stat-card.c5::before { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+.stat-card.c6::before { background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+.stat-card.wide { grid-column: span 2; }
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+.stat-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 34px; font-weight: 700;
+  line-height: 1; margin-bottom: 6px;
+}
+.stat-card.c1 .stat-num { color: var(--cyan); }
+.stat-card.c2 .stat-num { color: var(--gold-lt); }
+.stat-card.c3 .stat-num { color: var(--teal); }
+.stat-card.c4 .stat-num { color: var(--violet); }
+.stat-card.c5 .stat-num { color: var(--green); }
+.stat-card.c6 .stat-num { color: var(--orange); }
+.stat-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── SECTION ── */
+.section { padding: 64px 0; border-top: 1px solid var(--line); }
+.section-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 8px; opacity: 0.7;
+}
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(20px, 3vw, 30px); font-weight: 700;
+  letter-spacing: 2px; color: #fff; margin-bottom: 40px;
+}
+.section-title span { color: var(--gold-lt); }
+
+/* ── IMPACT TIMELINE ── */
+.timeline { position: relative; padding-left: 32px; }
+.timeline::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(180deg, var(--cyan), var(--violet), var(--gold), transparent);
+}
+.tl-item { position: relative; margin-bottom: 44px; }
+.tl-dot {
+  position: absolute; left: -37px; top: 4px;
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--cyan);
+  background: var(--black);
+  box-shadow: 0 0 10px rgba(0,180,255,0.5);
+}
+.tl-item:nth-child(2) .tl-dot { border-color: var(--gold); box-shadow: 0 0 10px rgba(201,168,76,0.5); }
+.tl-item:nth-child(3) .tl-dot { border-color: var(--teal); box-shadow: 0 0 10px rgba(0,229,204,0.5); }
+.tl-item:nth-child(4) .tl-dot { border-color: var(--violet); box-shadow: 0 0 10px rgba(155,92,255,0.5); }
+.tl-item:nth-child(5) .tl-dot { border-color: var(--orange); box-shadow: 0 0 10px rgba(255,140,66,0.5); }
+.tl-meta {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 8px;
+}
+.tl-date {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+}
+.tl-co {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 1px;
+}
+.tl-item:nth-child(1) .tl-co { color: var(--cyan); border: 1px solid rgba(0,180,255,0.2); background: rgba(0,180,255,0.06); }
+.tl-item:nth-child(2) .tl-co { color: var(--gold-lt); border: 1px solid var(--gold-dim); background: var(--gold-faint); }
+.tl-item:nth-child(3) .tl-co { color: var(--teal); border: 1px solid rgba(0,229,204,0.2); background: rgba(0,229,204,0.05); }
+.tl-item:nth-child(4) .tl-co { color: var(--violet); border: 1px solid rgba(155,92,255,0.2); background: rgba(155,92,255,0.05); }
+.tl-item:nth-child(5) .tl-co { color: var(--orange); border: 1px solid rgba(255,140,66,0.2); background: rgba(255,140,66,0.05); }
+.tl-role {
+  font-family: 'Rajdhani', sans-serif; font-weight: 700;
+  font-size: 18px; color: #fff; margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+.tl-wins {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+  gap: 10px; margin-bottom: 14px;
+}
+.tl-win {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 12px 14px; border-left: 3px solid;
+}
+.tl-item:nth-child(1) .tl-win { border-left-color: var(--cyan); }
+.tl-item:nth-child(2) .tl-win { border-left-color: var(--gold); }
+.tl-item:nth-child(3) .tl-win { border-left-color: var(--teal); }
+.tl-item:nth-child(4) .tl-win { border-left-color: var(--violet); }
+.tl-item:nth-child(5) .tl-win { border-left-color: var(--orange); }
+.tl-win-num {
+  font-family: 'Orbitron', sans-serif; font-size: 22px;
+  font-weight: 700; line-height: 1; margin-bottom: 4px;
+}
+.tl-item:nth-child(1) .tl-win-num { color: var(--cyan); }
+.tl-item:nth-child(2) .tl-win-num { color: var(--gold-lt); }
+.tl-item:nth-child(3) .tl-win-num { color: var(--teal); }
+.tl-item:nth-child(4) .tl-win-num { color: var(--violet); }
+.tl-item:nth-child(5) .tl-win-num { color: var(--orange); }
+.tl-win-text { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
+.tl-desc { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 820px; }
+
+/* ── EXPERTISE DOMAINS ── */
+.domains-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+.domain-card {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 28px 24px; position: relative; overflow: hidden;
+  transition: all 0.25s;
+}
+.domain-card::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 0; right: 0; height: 2px;
+}
+.domain-card:nth-child(1)::after { background: linear-gradient(90deg, var(--cyan), transparent); }
+.domain-card:nth-child(2)::after { background: linear-gradient(90deg, var(--gold), transparent); }
+.domain-card:nth-child(3)::after { background: linear-gradient(90deg, var(--teal), transparent); }
+.domain-card:nth-child(4)::after { background: linear-gradient(90deg, var(--violet), transparent); }
+.domain-card:nth-child(5)::after { background: linear-gradient(90deg, var(--orange), transparent); }
+.domain-card:nth-child(6)::after { background: linear-gradient(90deg, var(--red), transparent); }
+.domain-card:hover { transform: translateY(-4px); border-color: rgba(0,180,255,0.20); box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
+.domain-icon {
+  font-size: 28px; margin-bottom: 14px; display: block;
+}
+.domain-name {
+  font-family: 'Rajdhani', sans-serif; font-weight: 700;
+  font-size: 17px; letter-spacing: 1px; color: #fff;
+  margin-bottom: 10px;
+}
+.domain-skills {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.ds {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 1px;
+  background: rgba(0,180,255,0.06); border: 1px solid rgba(0,180,255,0.12);
+  color: rgba(160,200,255,0.6);
+}
+
+/* ── IMPACT METRICS BAND ── */
+.metrics-band {
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(0,40,80,0.4) 50%, var(--surface) 100%);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--cyan);
+  padding: 40px 48px;
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 24px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.metrics-band::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--gold), transparent);
+}
+.metric-item {}
+.metric-big {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 36px; font-weight: 900; line-height: 1;
+  background: linear-gradient(135deg, #fff, var(--cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 6px;
+}
+.metric-item:nth-child(2) .metric-big { background: linear-gradient(135deg, #fff, var(--gold)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.metric-item:nth-child(3) .metric-big { background: linear-gradient(135deg, #fff, var(--teal)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.metric-item:nth-child(4) .metric-big { background: linear-gradient(135deg, #fff, var(--violet)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.metric-item:nth-child(5) .metric-big { background: linear-gradient(135deg, #fff, var(--green)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.metric-lbl {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+}
+
+/* ── SKILLS RADAR / COMPETENCY BARS ── */
+.skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.skill-group {}
+.skill-group-title {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 20px; opacity: 0.8;
+}
+.skill-bar-item { margin-bottom: 14px; }
+.skill-bar-header {
+  display: flex; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.skill-bar-name { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: 0.5px; }
+.skill-bar-pct {
+  font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+}
+.skill-bar-track {
+  height: 5px; background: rgba(255,255,255,0.06);
+  border-radius: 3px; overflow: hidden;
+}
+.skill-bar-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--teal));
+}
+.skill-bar-item:nth-child(2) .skill-bar-fill { background: linear-gradient(90deg, var(--gold), #e8c060); }
+.skill-bar-item:nth-child(3) .skill-bar-fill { background: linear-gradient(90deg, var(--teal), var(--green)); }
+.skill-bar-item:nth-child(4) .skill-bar-fill { background: linear-gradient(90deg, var(--violet), #b77aff); }
+.skill-bar-item:nth-child(5) .skill-bar-fill { background: linear-gradient(90deg, var(--orange), #ffaa66); }
+.skill-bar-item:nth-child(6) .skill-bar-fill { background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+.skill-bar-item:nth-child(7) .skill-bar-fill { background: linear-gradient(90deg, var(--red), var(--orange)); }
+
+/* ── FRAMEWORK CERTIFICATIONS ── */
+.frameworks {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+.fw-card {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 20px 16px; text-align: center;
+  transition: all 0.2s; cursor: default;
+}
+.fw-card:hover { border-color: var(--gold-dim); background: var(--gold-faint); transform: translateY(-2px); }
+.fw-name {
+  font-family: 'Orbitron', sans-serif; font-size: 14px;
+  font-weight: 700; color: var(--gold-lt); letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.fw-desc {
+  font-family: 'DM Mono', monospace; font-size: 8px;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+}
+
+/* ── EDUCATION & CERTS ── */
+.edu-certs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.edu-list, .cert-list { display: flex; flex-direction: column; gap: 14px; }
+.edu-item, .cert-item {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 18px 20px;
+  border-left: 2px solid var(--gold-dim);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.edu-deg { font-weight: 700; font-size: 15px; color: #fff; }
+.edu-school { font-size: 13px; color: var(--muted); }
+.edu-year { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--gold-dim); text-transform: uppercase; }
+.cert-name { font-weight: 700; font-size: 14px; color: var(--cyan); }
+.cert-body { font-size: 12px; color: var(--muted); }
+
+/* ── PHILOSOPHY QUOTE ── */
+.quote-block {
+  background: linear-gradient(135deg, var(--surface), rgba(0,30,70,0.5));
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  padding: 40px 48px; text-align: center;
+  position: relative; overflow: hidden; margin: 60px 0;
+}
+.quote-block::before {
+  content: '"'; position: absolute;
+  top: -20px; left: 30px;
+  font-family: 'Bebas Neue', sans-serif; font-size: 160px;
+  color: rgba(201,168,76,0.06); line-height: 1;
+  pointer-events: none;
+}
+.quote-text {
+  font-family: 'Rajdhani', sans-serif; font-weight: 600;
+  font-size: clamp(18px, 2.5vw, 26px); font-style: italic;
+  color: var(--text); line-height: 1.5; max-width: 860px; margin: 0 auto 20px;
+}
+.quote-attr {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--gold-dim);
+}
+
+/* ── SECTORS SERVED ── */
+.sectors {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+.sector {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 22px 18px; text-align: center;
+  transition: all 0.2s;
+}
+.sector:hover { border-color: rgba(0,180,255,0.2); transform: translateY(-3px); }
+.sector-icon { font-size: 26px; margin-bottom: 10px; display: block; }
+.sector-name { font-weight: 700; font-size: 14px; color: #fff; letter-spacing: 0.5px; margin-bottom: 6px; }
+.sector-detail { font-size: 12px; color: var(--muted); }
+
+/* ── FOOTER BRAND BLOCK ── */
+.footer {
+  margin-top: 80px;
+  border-top: 1px solid var(--line);
+  padding: 50px 0 40px;
+  text-align: center;
+}
+.footer-brand {
+  display: inline-block;
+  border: 1px solid rgba(201,168,76,0.22);
+  padding: 24px 52px;
+  position: relative;
+  background: rgba(201,168,76,0.025);
+  margin-bottom: 24px;
+}
+.footer-brand::before {
+  content: '';
+  position: absolute; top: -1px; left: 24px; right: 24px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.footer-brand::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 24px; right: 24px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.footer-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px; letter-spacing: 6px;
+  color: var(--gold-lt); line-height: 1; margin-bottom: 6px;
+}
+.footer-tagline {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2.5px; color: var(--gold-dim);
+  text-transform: uppercase; line-height: 2.2;
+}
+.footer-contact {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: var(--muted);
+  text-transform: uppercase;
+}
+.footer-contact a { color: var(--cyan); text-decoration: none; }
+
+/* ── SUBTLE SCANLINES ── */
+.scanlines {
+  position: fixed; inset: 0; pointer-events: none; z-index: 998;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 4px
+  );
+}
+
+/* Scroll indicator bar */
+.scroll-progress {
+  position: fixed; top: 56px; left: 0; right: 0;
+  height: 2px; background: rgba(0,0,0,0.3); z-index: 901;
+}
+.scroll-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--gold), var(--violet));
+  transition: width 0.1s; width: 0%;
+}
+</style>
+</head>
+<body>
+
+<!-- WATERMARKS -->
+<div class="wm-diagonal"></div>
+<div class="scanlines"></div>
+<div class="wm-corner">
+  <div class="wm-corner-name">Sky Sharma</div>
+  <div class="wm-corner-title">
+    CISO &amp; Cyber Leader<br>
+    Cognitive Innovator<br>
+    AI · Quantum · Data Ethics Expert<br>
+    Driving Global Impact
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Sky Sharma</div>
+  <ul class="nav-links">
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#expertise">Expertise</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#frameworks">Frameworks</a></li>
+    <li><a href="#background">Background</a></li>
+  </ul>
+</nav>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress"><div class="scroll-fill" id="spill"></div></div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Executive Cybersecurity Portfolio</div>
+      <div class="hero-name">Sky Sharma</div>
+      <div class="hero-title">Chief Information Security Officer</div>
+      <p class="hero-desc">
+        15+ years driving enterprise security transformation across DoD, federal agencies, and global commercial enterprises. Architect of zero-trust programs, compliance frameworks, and AI-powered security operations. CIO and CISO now shaping the future of cyber defense at the intersection of AI, quantum, and data ethics.
+      </p>
+      <div class="hero-badges">
+        <span class="badge gold">CISSP Certified</span>
+        <span class="badge">CMMC | NIST | FISMA</span>
+        <span class="badge teal">Zero Trust Architect</span>
+        <span class="badge violet">AI Security Pioneer</span>
+        <span class="badge">DoD Clearance</span>
+        <span class="badge green">Quantum Security</span>
+        <span class="badge">Senior Executive</span>
+        <span class="badge gold">C|OSINT</span>
+      </div>
+      <div class="hero-cta">
+        <a href="mailto:sharma.sky@gmail.com" class="btn btn-primary">Contact Sky</a>
+        <a href="https://www.linkedin.com/in/skysharma/" class="btn btn-outline">LinkedIn Profile</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-card c1">
+        <div class="stat-num">15+</div>
+        <div class="stat-label">Years Security Leadership</div>
+      </div>
+      <div class="stat-card c2">
+        <div class="stat-num">$600M</div>
+        <div class="stat-label">JV Portfolio Directed</div>
+      </div>
+      <div class="stat-card c3">
+        <div class="stat-num">$48M</div>
+        <div class="stat-label">Contract Secured</div>
+      </div>
+      <div class="stat-card c4">
+        <div class="stat-num">50%</div>
+        <div class="stat-label">Vuln. Reduction Achieved</div>
+      </div>
+      <div class="stat-card c5">
+        <div class="stat-num">800+</div>
+        <div class="stat-label">Personnel Secured (USAF)</div>
+      </div>
+      <div class="stat-card c6">
+        <div class="stat-num">250%</div>
+        <div class="stat-label">Innovation Increase (R&D Lab)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT METRICS BAND -->
+  <div class="metrics-band">
+    <div class="metric-item">
+      <div class="metric-big">95%</div>
+      <div class="metric-lbl">Threat Response Improvement</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-big">$71M</div>
+      <div class="metric-lbl">IT Portfolio Managed (USAF)</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-big">4</div>
+      <div class="metric-lbl">Cybersecurity Portfolios Launched</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-big">25</div>
+      <div class="metric-lbl">ISSOs / ISSEs Directed</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-big">90%</div>
+      <div class="metric-lbl">Workforce Readiness Improvement</div>
+    </div>
+  </div>
+
+  <!-- CAREER IMPACT TIMELINE -->
+  <section class="section" id="impact">
+    <div class="section-label">Career Journey</div>
+    <div class="section-title">Executive <span>Impact Timeline</span></div>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">
+          <span class="tl-date">Jun 2025 – Present</span>
+          <span class="tl-co">Innovation Vista</span>
+        </div>
+        <div class="tl-role">CISO / CIO / CTO Advisor</div>
+        <div class="tl-wins">
+          <div class="tl-win">
+            <div class="tl-win-num">45%</div>
+            <div class="tl-win-text">Security posture improvement per engagement</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">60%</div>
+            <div class="tl-win-text">Compliance gap reduction for advisory clients</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">30%</div>
+            <div class="tl-win-text">Infrastructure cost reduction via cloud migration</div>
+          </div>
+        </div>
+        <p class="tl-desc">Providing fractional CISO, CIO, and CTO advisory to enterprise clients. Transforming IT departments into revenue-generating secure operations via AWS/Azure deployments, workflow automation, NIST RMF implementation, and zero-trust architecture redesign.</p>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">
+          <span class="tl-date">Jan 2021 – May 2025</span>
+          <span class="tl-co">SD Solutions</span>
+        </div>
+        <div class="tl-role">Chief Information Security Officer & Cyber Practice Director</div>
+        <div class="tl-wins">
+          <div class="tl-win">
+            <div class="tl-win-num">$600M</div>
+            <div class="tl-win-text">Joint venture portfolio directed across 4 cybersecurity lines</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">$48M</div>
+            <div class="tl-win-text">Contract secured via risk-based security framework</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">250%</div>
+            <div class="tl-win-text">Innovation increase through R&D lab establishment</div>
+          </div>
+        </div>
+        <p class="tl-desc">Led a $600M PE-backed joint venture launching four cybersecurity portfolios. Drove business development, client negotiations, and enterprise risk management. Established R&D lab for advanced cybersecurity solutions and optimized workforce performance by 60%.</p>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">
+          <span class="tl-date">Sep 2018 – Dec 2021</span>
+          <span class="tl-co">Falconwood Inc.</span>
+        </div>
+        <div class="tl-role">Senior Cybersecurity Consultant & SME</div>
+        <div class="tl-wins">
+          <div class="tl-win">
+            <div class="tl-win-num">70%</div>
+            <div class="tl-win-text">Network resilience enhancement via Zero Trust</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">48%</div>
+            <div class="tl-win-text">Security incident reduction (CMMC compliance)</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">65%</div>
+            <div class="tl-win-text">System uptime improvement (STIG/POA&M)</div>
+          </div>
+        </div>
+        <p class="tl-desc">Directed 25 ISSOs and ISSEs across DoD environments (Navy, Air Force, NATO, Army). Led NIST 800-207 Zero Trust implementation, CMMC certification initiatives, and DISA STIG compliance across joint warfighter environments.</p>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">
+          <span class="tl-date">Aug 2017 – Aug 2018</span>
+          <span class="tl-co">Ishpi LLC</span>
+        </div>
+        <div class="tl-role">Senior Cybersecurity Analyst & IA Consultant</div>
+        <div class="tl-wins">
+          <div class="tl-win">
+            <div class="tl-win-num">75%</div>
+            <div class="tl-win-text">Compliance gap reduction for federal agencies</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">90%</div>
+            <div class="tl-win-text">Workforce cyber readiness improvement</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">80%</div>
+            <div class="tl-win-text">Enterprise security posture improvement at USCG</div>
+          </div>
+        </div>
+        <p class="tl-desc">Advised senior federal leadership on CNSSI 4009, NIST 800-63, FISMA, NSA IAM frameworks. Established Organizational Risk Compliance Program for USCG C3CEN. Spearheaded DoD Directive 8140 transition integrating DCWF and NICE standards.</p>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">
+          <span class="tl-date">Jul 2007 – Jul 2017</span>
+          <span class="tl-co">U.S. Air Force</span>
+        </div>
+        <div class="tl-role">CIO & CISO — HQ Air Combat Command / Command Surgeon Office</div>
+        <div class="tl-wins">
+          <div class="tl-win">
+            <div class="tl-win-num">$71M</div>
+            <div class="tl-win-text">IM/IT portfolio directed for AF Surgeon General</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">150%</div>
+            <div class="tl-win-text">Operational efficiency — DoD's first EHR legacy migration</div>
+          </div>
+          <div class="tl-win">
+            <div class="tl-win-num">125%</div>
+            <div class="tl-win-text">Security posture enhancement at Command Surgeon Office</div>
+          </div>
+        </div>
+        <p class="tl-desc">Directed cybersecurity operations for $71M IM/IT portfolio supporting 800+ personnel. Pioneered DoD's first legacy EHR application migration. Led MHS GENESIS adoption, DHA network modernization, and HIPAA/FISMA compliance across 75+ global locations.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- EXPERTISE DOMAINS -->
+  <section class="section" id="expertise">
+    <div class="section-label">Domains of Excellence</div>
+    <div class="section-title">Core <span>Expertise Areas</span></div>
+    <div class="domains-grid">
+      <div class="domain-card">
+        <span class="domain-icon">🛡️</span>
+        <div class="domain-name">Cybersecurity Strategy & Governance</div>
+        <div class="domain-skills">
+          <span class="ds">Enterprise Security Programs</span>
+          <span class="ds">Security Roadmaps</span>
+          <span class="ds">Board Reporting</span>
+          <span class="ds">Risk Quantification</span>
+          <span class="ds">Security Architecture</span>
+          <span class="ds">Policy Development</span>
+        </div>
+      </div>
+      <div class="domain-card">
+        <span class="domain-icon">⚙️</span>
+        <div class="domain-name">Zero Trust & Cloud Security</div>
+        <div class="domain-skills">
+          <span class="ds">NIST 800-207 Zero Trust</span>
+          <span class="ds">AWS Security</span>
+          <span class="ds">Azure Security</span>
+          <span class="ds">Cloud Architecture</span>
+          <span class="ds">SaaS Security</span>
+          <span class="ds">SASE / CASB</span>
+        </div>
+      </div>
+      <div class="domain-card">
+        <span class="domain-icon">📋</span>
+        <div class="domain-name">Compliance & Risk Management</div>
+        <div class="domain-skills">
+          <span class="ds">NIST CSF / RMF</span>
+          <span class="ds">CMMC Level 3</span>
+          <span class="ds">FISMA</span>
+          <span class="ds">SOC 2 Type II</span>
+          <span class="ds">FedRAMP</span>
+          <span class="ds">HIPAA</span>
+          <span class="ds">GDPR / CCPA</span>
+        </div>
+      </div>
+      <div class="domain-card">
+        <span class="domain-icon">🤖</span>
+        <div class="domain-name">AI & Emerging Technology Security</div>
+        <div class="domain-skills">
+          <span class="ds">AI/ML Security</span>
+          <span class="ds">Post-Quantum Crypto</span>
+          <span class="ds">Threat Intelligence AI</span>
+          <span class="ds">Adversarial ML Defense</span>
+          <span class="ds">Data Ethics</span>
+          <span class="ds">AI Governance</span>
+        </div>
+      </div>
+      <div class="domain-card">
+        <span class="domain-icon">🎯</span>
+        <div class="domain-name">DoD & Federal Cybersecurity</div>
+        <div class="domain-skills">
+          <span class="ds">DoD 8140 / 8570</span>
+          <span class="ds">DISA STIGs</span>
+          <span class="ds">RMF / ATO</span>
+          <span class="ds">POA&M Management</span>
+          <span class="ds">DCSA Compliance</span>
+          <span class="ds">ITAR / CUI</span>
+        </div>
+      </div>
+      <div class="domain-card">
+        <span class="domain-icon">💼</span>
+        <div class="domain-name">Executive Leadership & BD</div>
+        <div class="domain-skills">
+          <span class="ds">P&L Ownership</span>
+          <span class="ds">Business Development</span>
+          <span class="ds">M&A Due Diligence</span>
+          <span class="ds">Team Building</span>
+          <span class="ds">Executive Advisory</span>
+          <span class="ds">Stakeholder Mgmt</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS COMPETENCY BARS -->
+  <section class="section" id="skills">
+    <div class="section-label">Proficiency Assessment</div>
+    <div class="section-title">Technical & Leadership <span>Competencies</span></div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">Technical Security Capabilities</div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Enterprise Security Architecture</span>
+            <span class="skill-bar-pct">97%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:97%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Risk Management & Compliance</span>
+            <span class="skill-bar-pct">99%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:99%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Cloud Security (AWS/Azure/GCP)</span>
+            <span class="skill-bar-pct">91%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:91%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Incident Response & Threat Intel</span>
+            <span class="skill-bar-pct">95%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">AI/ML Security & Governance</span>
+            <span class="skill-bar-pct">88%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">DevSecOps & Automation</span>
+            <span class="skill-bar-pct">84%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:84%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Penetration Testing & Ethical Hacking</span>
+            <span class="skill-bar-pct">82%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:82%"></div></div>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Executive & Business Leadership</div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Cybersecurity Strategy Development</span>
+            <span class="skill-bar-pct">98%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:98%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Executive Stakeholder Engagement</span>
+            <span class="skill-bar-pct">96%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:96%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Business Development & Revenue Growth</span>
+            <span class="skill-bar-pct">92%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Team Building & Talent Development</span>
+            <span class="skill-bar-pct">94%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:94%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Budget & Portfolio Management</span>
+            <span class="skill-bar-pct">93%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:93%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Strategic Partnerships & Advisory</span>
+            <span class="skill-bar-pct">90%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">Change Management & Transformation</span>
+            <span class="skill-bar-pct">91%</span>
+          </div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:91%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERSHIP PHILOSOPHY -->
+  <div class="quote-block">
+    <p class="quote-text">
+      "Security is not a product or a project — it is a posture, a culture, and a discipline. The most resilient organizations are those where cybersecurity is embedded in every decision, from the boardroom to the endpoint."
+    </p>
+    <div class="quote-attr">Sky Sharma · CISO Philosophy · Cognitive Innovator · AI · Quantum · Data Ethics</div>
+  </div>
+
+  <!-- FRAMEWORKS & COMPLIANCE -->
+  <section class="section" id="frameworks">
+    <div class="section-label">Regulatory & Standards Mastery</div>
+    <div class="section-title">Frameworks & <span>Compliance Portfolio</span></div>
+    <div class="frameworks">
+      <div class="fw-card"><div class="fw-name">NIST CSF</div><div class="fw-desc">Cybersecurity Framework 2.0</div></div>
+      <div class="fw-card"><div class="fw-name">NIST RMF</div><div class="fw-desc">Risk Management Framework</div></div>
+      <div class="fw-card"><div class="fw-name">CMMC</div><div class="fw-desc">Level 2 & 3 Certification</div></div>
+      <div class="fw-card"><div class="fw-name">FISMA</div><div class="fw-desc">Federal IM Security Act</div></div>
+      <div class="fw-card"><div class="fw-name">SOC 2</div><div class="fw-desc">Type I & II Audits</div></div>
+      <div class="fw-card"><div class="fw-name">FedRAMP</div><div class="fw-desc">Cloud Authorization</div></div>
+      <div class="fw-card"><div class="fw-name">HIPAA</div><div class="fw-desc">Healthcare Data Security</div></div>
+      <div class="fw-card"><div class="fw-name">GDPR</div><div class="fw-desc">EU Data Privacy Compliance</div></div>
+      <div class="fw-card"><div class="fw-name">ISO 27001</div><div class="fw-desc">ISMS Certification</div></div>
+      <div class="fw-card"><div class="fw-name">NIST 800-171</div><div class="fw-desc">CUI Protection</div></div>
+      <div class="fw-card"><div class="fw-name">DISA STIGs</div><div class="fw-desc">DoD Technical Hardening</div></div>
+      <div class="fw-card"><div class="fw-name">Zero Trust</div><div class="fw-desc">NIST 800-207 Architecture</div></div>
+    </div>
+  </section>
+
+  <!-- SECTORS SERVED -->
+  <section class="section">
+    <div class="section-label">Industry Verticals</div>
+    <div class="section-title">Sectors <span>Served</span></div>
+    <div class="sectors">
+      <div class="sector">
+        <span class="sector-icon">✈️</span>
+        <div class="sector-name">Defense & Military</div>
+        <div class="sector-detail">DoD, USAF, Navy, NATO, Army cybersecurity operations</div>
+      </div>
+      <div class="sector">
+        <span class="sector-icon">🏛️</span>
+        <div class="sector-name">Federal Government</div>
+        <div class="sector-detail">USCG, federal agencies, healthcare administration</div>
+      </div>
+      <div class="sector">
+        <span class="sector-icon">🏥</span>
+        <div class="sector-name">Healthcare & MHS</div>
+        <div class="sector-detail">MHS GENESIS, EHR systems, HIPAA compliance</div>
+      </div>
+      <div class="sector">
+        <span class="sector-icon">🏢</span>
+        <div class="sector-name">Commercial Enterprise</div>
+        <div class="sector-detail">Fortune 500, PE-backed ventures, global enterprises</div>
+      </div>
+      <div class="sector">
+        <span class="sector-icon">🔬</span>
+        <div class="sector-name">Emerging Technology</div>
+        <div class="sector-detail">AI governance, quantum security, data ethics advisory</div>
+      </div>
+      <div class="sector">
+        <span class="sector-icon">🛸</span>
+        <div class="sector-name">Defense Contractors</div>
+        <div class="sector-detail">CMMC compliance, CUI handling, ITAR, supply chain</div>
+      </div>
+      <div class="sector">
+        <span class="sector-icon">☁️</span>
+        <div class="sector-name">Cloud & SaaS</div>
+        <div class="sector-detail">AWS, Azure, GCP security architectures, FedRAMP</div>
+      </div>
+      <div class="sector">
+        <span class="sector-icon">🌐</span>
+        <div class="sector-name">Global Operations</div>
+        <div class="sector-detail">Multi-national deployments, GDPR, international policy</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION & CERTIFICATIONS -->
+  <section class="section" id="background">
+    <div class="section-label">Credentials & Academic Formation</div>
+    <div class="section-title">Education & <span>Certifications</span></div>
+    <div class="edu-certs-grid">
+      <div>
+        <div class="skill-group-title" style="margin-bottom:18px">Academic & Executive Education</div>
+        <div class="edu-list">
+          <div class="edu-item">
+            <div class="edu-deg">Master of Business Administration (MBA)</div>
+            <div class="edu-school">Western Governors University</div>
+            <div class="edu-year">2012 – 2014</div>
+          </div>
+          <div class="edu-item">
+            <div class="edu-deg">B.S. Information Technology</div>
+            <div class="edu-school">Western Governors University</div>
+            <div class="edu-year">2007 – 2012</div>
+          </div>
+          <div class="edu-item">
+            <div class="edu-deg">A.A.S. Healthcare Management</div>
+            <div class="edu-school">Air University</div>
+            <div class="edu-year">2001 – 2003</div>
+          </div>
+          <div class="edu-item" style="border-left-color: var(--gold-lt);">
+            <div class="edu-deg" style="color: var(--gold-lt);">Executive Certificate — Global Business Trends</div>
+            <div class="edu-school">Wharton Aresty Institute · University of Pennsylvania</div>
+            <div class="edu-year">2015</div>
+          </div>
+          <div class="edu-item" style="border-left-color: var(--gold-lt);">
+            <div class="edu-deg" style="color: var(--gold-lt);">Executive Certificate — Critical Political Economy</div>
+            <div class="edu-school">Leiden University</div>
+            <div class="edu-year">2015 – 2016</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-title" style="margin-bottom:18px">Professional Certifications</div>
+        <div class="cert-list">
+          <div class="cert-item" style="border-left-color: var(--cyan);">
+            <div class="cert-name">CISSP</div>
+            <div class="cert-body">Certified Information Systems Security Professional · ISC2</div>
+          </div>
+          <div class="cert-item" style="border-left-color: var(--teal);">
+            <div class="cert-name">C|OSINT</div>
+            <div class="cert-body">Certified Open Source Intelligence Analyst · McAfee Institute</div>
+          </div>
+          <div class="cert-item" style="border-left-color: var(--gold-lt);">
+            <div class="cert-name">DoD 8140 / 8570</div>
+            <div class="cert-body">IAT Level III · IAM Level III · Fully Compliant</div>
+          </div>
+          <div class="cert-item" style="border-left-color: var(--violet);">
+            <div class="cert-name">Active Security Clearance</div>
+            <div class="cert-body">DoD Cleared · Veteran Background · Mission-Critical Eligible</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <div class="footer-name">Sky Sharma</div>
+      <div class="footer-tagline">
+        CISO &amp; Cyber Leader &nbsp;·&nbsp; Cognitive Innovator &nbsp;·&nbsp; AI · Quantum · Data Ethics Expert &nbsp;·&nbsp; Driving Global Impact
+      </div>
+    </div>
+    <div class="footer-contact">
+      <a href="mailto:sharma.sky@gmail.com">(757) 771-8330 &nbsp;·&nbsp; sharma.sky@gmail.com</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.linkedin.com/in/skysharma/">linkedin.com/in/skysharma</a>
+    </div>
+  </footer>
+
+</div>
+
+<s
