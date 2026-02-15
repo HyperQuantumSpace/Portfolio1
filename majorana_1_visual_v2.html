@@ -345,7 +345,7 @@ mark {
 }
 .update-banner:hover { border-left-color: rgba(16,216,128,0.7); }
 .update-banner .icon { font-size: 19px; flex-shrink: 0; margin-top: 2px; }
-.update-banner strong {
+.update-banner > div > strong {
   color: var(--emerald);
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
@@ -362,14 +362,14 @@ mark {
   border-color: rgba(245,158,11,0.18);
   border-left-color: var(--amber);
 }
-.update-banner.warn strong { color: var(--amber); }
+.update-banner.warn > div > strong { color: var(--amber); }
 
 .update-banner.info {
   background: rgba(0,200,255,0.025);
   border-color: rgba(0,200,255,0.13);
   border-left-color: rgba(0,200,255,0.38);
 }
-.update-banner.info strong { color: var(--cyan-dim); }
+.update-banner.info > div > strong { color: var(--cyan-dim); }
 
 /* WARN / DANGER */
 .warn-card {
@@ -693,7 +693,7 @@ footer::before {
       <span class="icon">🤝</span>
       <div>
         <strong>July 2025 / Magne Project: World's First Level 2 Quantum Computer</strong>
-        <p>Microsoft partnered with Atom Computing and Nordic initiative QuNorth (backed by Denmark's EIFO and the Novo Nordisk Foundation with a total EUR 80M investment) to build <strong>Magne</strong>, positioned as the world's first commercially available Level 2 quantum computer. Magne will comprise approximately 50 logical qubits encoded from 1,225-plus physical neutral-atom qubits, combining Atom Computing's hardware with Microsoft's Azure error-correction software. Construction began autumn 2025; operations expected late 2026 or early 2027.</p>
+        <p>Microsoft partnered with Atom Computing and Nordic initiative QuNorth (backed by Denmark's EIFO and the Novo Nordisk Foundation with a total EUR 80M investment) to build <mark>Magne</mark>, positioned as the world's first commercially available Level 2 quantum computer. Magne will comprise approximately 50 logical qubits encoded from 1,225-plus physical neutral-atom qubits, combining Atom Computing's hardware with Microsoft's Azure error-correction software. Construction began autumn 2025; operations expected late 2026 or early 2027.</p>
       </div>
     </div>
 
