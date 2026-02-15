@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Majorana 1 - Microsoft's Quantum Leap</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+:root {
+  --bg:       #02040c;
+  --bg2:      #040810;
+  --surface:  rgba(255,255,255,0.03);
+  --surface2: rgba(255,255,255,0.055);
+  --border:   rgba(0,200,255,0.12);
+  --border2:  rgba(0,200,255,0.22);
+  --cyan:     #00c8ff;
+  --cyan-dim: rgba(0,200,255,0.6);
+  --violet:   #8b5cf6;
+  --emerald:  #10d880;
+  --amber:    #f59e0b;
+  --rose:     #f43f5e;
+  --text:     #d4dff0;
+  --muted:    #6b7fa0;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* CANVAS BG */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+/* SCANLINE */
+.scanline {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,200,255,0.12), transparent);
+  animation: scan 10s linear infinite;
+  pointer-events: none;
+  z-index: 999;
+}
+@keyframes scan { 0% { top: -2px; } 100% { top: 100vh; } }
+
+/* LAYOUT */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 28px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================ HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 0 60px;
+  position: relative;
+}
+.hero-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -60%);
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(0,200,255,0.055) 0%, rgba(139,92,246,0.04) 40%, transparent 70%);
+  pointer-events: none;
+  animation: breathe 6s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { transform: translate(-50%,-60%) scale(1); opacity: 0.8; }
+  50%       { transform: translate(-50%,-60%) scale(1.08); opacity: 1; }
+}
+
+/* Chip icon */
+.chip-visual {
+  width: 120px; height: 120px;
+  margin: 0 auto 36px;
+  position: relative;
+}
+.chip-visual svg {
+  width: 100%; height: 100%;
+  filter: drop-shadow(0 0 20px rgba(0,200,255,0.45)) drop-shadow(0 0 40px rgba(139,92,246,0.25));
+  animation: chip-spin 22s linear infinite;
+}
+@keyframes chip-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.chip-core {
+  position: absolute;
+  inset: 30px;
+  background: radial-gradient(circle, rgba(0,200,255,0.28) 0%, rgba(139,92,246,0.18) 60%, transparent 100%);
+  border-radius: 4px;
+  animation: core-pulse 3s ease-in-out infinite;
+}
+@keyframes core-pulse { 0%,100% { opacity:0.55; } 50% { opacity:1; } }
+
+.badge-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:28px; }
+.badge {
+  background: rgba(0,200,255,0.055);
+  border: 1px solid rgba(0,200,255,0.18);
+  color: var(--cyan-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  padding: 4px 12px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.badge.emerald { background: rgba(16,216,128,0.06); border-color: rgba(16,216,128,0.22); color: var(--emerald); }
+
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 18px;
+  opacity: 0.75;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(52px, 10vw, 96px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  padding-bottom: 0.12em;
+  display: inline-block;
+  background: linear-gradient(135deg, #ffffff 0%, #00c8ff 35%, #8b5cf6 70%, #f43f5e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 28px rgba(0,200,255,0.28));
+  margin-bottom: 6px;
+}
+
+.hero-sub {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.hero-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0,200,255,0.04);
+  border: 1px solid rgba(0,200,255,0.14);
+  border-radius: 3px;
+  padding: 8px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 56px;
+}
+.hero-date span { color: var(--cyan); }
+
+/* STAT GRID */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(0,200,255,0.07);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 80px;
+  width: 100%;
+}
+@media (max-width: 600px) { .stat-grid { grid-template-columns: repeat(2,1fr); } }
+
+.stat-card {
+  background: var(--bg2);
+  padding: 32px 18px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(0,200,255,0.07) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.stat-card:hover { background: rgba(4,10,24,1); }
+.stat-card:hover::before { opacity: 1; }
+.stat-icon { font-size: 26px; margin-bottom: 12px; display: block; }
+.stat-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  padding-bottom: 0.06em;
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.stat-desc { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+
+/* SECTIONS */
+section { margin-bottom: 88px; }
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(0,200,255,0.28);
+  margin-bottom: 10px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 40px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0,200,255,0.08);
+  position: relative;
+}
+.section-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 80px; height: 1px;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(0,200,255,0.28);
+  letter-spacing: 0.1em;
+  min-width: 28px;
+}
+
+h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.35;
+  letter-spacing: 0.025em;
+}
+
+h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--cyan);
+  margin-bottom: 10px;
+  line-height: 1.45;
+}
+
+p { margin-bottom: 14px; color: var(--text); }
+p:last-child { margin-bottom: 0; }
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 26px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  backdrop-filter: blur(4px);
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,200,255,0.22), transparent);
+}
+.card:hover {
+  border-color: var(--border2);
+  background: var(--surface2);
+  transform: translateY(-2px);
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  gap: 14px;
+}
+
+/* CORNER DECO */
+.corner-deco { position:absolute; width:18px; height:18px; pointer-events:none; }
+.corner-deco.tl { top:0; left:0; border-top:1px solid rgba(0,200,255,0.35); border-left:1px solid rgba(0,200,255,0.35); }
+.corner-deco.br { bottom:0; right:0; border-bottom:1px solid rgba(0,200,255,0.35); border-right:1px solid rgba(0,200,255,0.35); }
+
+mark {
+  background: none;
+  color: var(--cyan);
+  border-bottom: 1px solid rgba(0,200,255,0.28);
+  padding: 0 2px;
+}
+
+/* UPDATE BANNERS */
+.update-banner {
+  background: linear-gradient(135deg, rgba(16,216,128,0.055), rgba(0,200,255,0.025));
+  border: 1px solid rgba(16,216,128,0.18);
+  border-left: 3px solid var(--emerald);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: border-left-color 0.3s;
+}
+.update-banner:hover { border-left-color: rgba(16,216,128,0.7); }
+.update-banner .icon { font-size: 19px; flex-shrink: 0; margin-top: 2px; }
+.update-banner strong {
+  color: var(--emerald);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 500;
+}
+.update-banner p { color: var(--text); font-size: 13.5px; margin: 0; line-height: 1.65; }
+
+.update-banner.warn {
+  background: linear-gradient(135deg, rgba(245,158,11,0.055), transparent);
+  border-color: rgba(245,158,11,0.18);
+  border-left-color: var(--amber);
+}
+.update-banner.warn strong { color: var(--amber); }
+
+.update-banner.info {
+  background: rgba(0,200,255,0.025);
+  border-color: rgba(0,200,255,0.13);
+  border-left-color: rgba(0,200,255,0.38);
+}
+.update-banner.info strong { color: var(--cyan-dim); }
+
+/* WARN / DANGER */
+.warn-card {
+  background: rgba(245,158,11,0.04);
+  border: 1px solid rgba(245,158,11,0.16);
+  border-left: 3px solid var(--amber);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+}
+.warn-card h3 { color: var(--amber); }
+
+.danger-card {
+  background: rgba(244,63,94,0.04);
+  border: 1px solid rgba(244,63,94,0.16);
+  border-left: 3px solid var(--rose);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+}
+.danger-card h3 { color: var(--rose); }
+
+/* TIMELINE */
+.timeline { position: relative; padding-left: 36px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px; top: 12px; bottom: 12px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--cyan), var(--violet), rgba(139,92,246,0.08));
+}
+.tl-item {
+  position: relative;
+  padding: 20px 0 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.2s;
+  border-radius: 0 8px 8px 0;
+}
+.tl-item:last-child { border-bottom: none; }
+.tl-item:hover { background: rgba(0,200,255,0.02); }
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -26px; top: 24px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0,200,255,0.14), 0 0 12px rgba(0,200,255,0.35);
+  z-index: 1;
+}
+.tl-item.past::before   { background: #22304a; box-shadow: 0 0 0 3px rgba(255,255,255,0.03); }
+.tl-item.future::before { background: var(--violet); box-shadow: 0 0 0 3px rgba(139,92,246,0.14), 0 0 12px rgba(139,92,246,0.3); }
+.tl-item.new-entry::before { background: var(--emerald); box-shadow: 0 0 0 3px rgba(16,216,128,0.14), 0 0 12px rgba(16,216,128,0.35); }
+
+.tl-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--cyan);
+  letter-spacing: 0.11em;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.tl-item.past .tl-date    { color: var(--muted); }
+.tl-item.new-entry .tl-date { color: var(--emerald); }
+.tl-item.future .tl-date  { color: var(--violet); }
+.tl-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #e8edf8;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.tl-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+/* TABLE */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  backdrop-filter: blur(4px);
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { background: linear-gradient(135deg, rgba(0,200,255,0.065), rgba(139,92,246,0.04)); }
+th {
+  padding: 14px 18px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan-dim);
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(0,200,255,0.05);
+  color: var(--text);
+  vertical-align: top;
+  line-height: 1.6;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(0,200,255,0.02); }
+
+.tag {
+  display: inline-block;
+  background: rgba(0,200,255,0.07);
+  border: 1px solid rgba(0,200,255,0.17);
+  color: var(--cyan);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.tag.green  { background: rgba(16,216,128,0.07); border-color: rgba(16,216,128,0.18); color: var(--emerald); }
+.tag.purple { background: rgba(139,92,246,0.07); border-color: rgba(139,92,246,0.18); color: #a78bfa; }
+.tag.orange { background: rgba(245,158,11,0.07); border-color: rgba(245,158,11,0.18); color: var(--amber); }
+
+/* STATUS PILL */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(245,158,11,0.065);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 100px;
+  padding: 6px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--amber);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.status-pill::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  animation: blink 2.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.28; } }
+
+/* TAKEAWAYS */
+.takeaway-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+.takeaway {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 26px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.takeaway::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,200,255,0.18), transparent);
+}
+.takeaway:hover { transform: translateY(-4px); border-color: rgba(0,200,255,0.26); }
+.takeaway-icon { font-size: 28px; margin-bottom: 14px; display: block; }
+.takeaway h3 { font-size: 13px; margin-bottom: 8px; color: #e8edf8; }
+.takeaway p  { font-size: 12px; color: var(--muted); margin: 0; }
+
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,200,255,0.1), rgba(139,92,246,0.08), transparent);
+  margin: 80px 0;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid rgba(0,200,255,0.07);
+  padding: 52px 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  position: relative;
+}
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 200px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--violet), transparent);
+}
+.footer-name {
+  font-family: 'Orbitron', sans-serif;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 8px;
+  padding-bottom: 0.1em;
+  line-height: 1.4;
+}
+.footer-title { font-size: 12px; color: var(--muted); margin-bottom: 12px; display: block; }
+.footer-desc { font-size: 12px; color: rgba(107,127,160,0.65); max-width: 560px; margin: 0 auto 18px; }
+.last-updated {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: rgba(107,127,160,0.38);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  h1 { font-size: 46px; }
+  h2 { font-size: 16px; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="scanline"></div>
+<canvas id="bg-canvas"></canvas>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-glow"></div>
+
+    <div class="chip-visual">
+      <div class="chip-core"></div>
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="56" stroke="url(#gr1)" stroke-width="1" stroke-dasharray="8 4"/>
+        <circle cx="60" cy="60" r="42" stroke="url(#gr2)" stroke-width="0.5" opacity="0.45"/>
+        <rect x="36" y="36" width="48" height="48" rx="4" stroke="url(#gr1)" stroke-width="1.2" fill="rgba(0,200,255,0.035)"/>
+        <line x1="60" y1="10" x2="60" y2="36" stroke="rgba(0,200,255,0.45)" stroke-width="0.8"/>
+        <line x1="60" y1="84" x2="60" y2="110" stroke="rgba(0,200,255,0.45)" stroke-width="0.8"/>
+        <line x1="10" y1="60" x2="36" y2="60" stroke="rgba(139,92,246,0.45)" stroke-width="0.8"/>
+        <line x1="84" y1="60" x2="110" y2="60" stroke="rgba(139,92,246,0.45)" stroke-width="0.8"/>
+        <line x1="20" y1="36" x2="36" y2="36" stroke="rgba(0,200,255,0.35)" stroke-width="0.8"/>
+        <line x1="36" y1="20" x2="36" y2="36" stroke="rgba(0,200,255,0.35)" stroke-width="0.8"/>
+        <line x1="100" y1="36" x2="84" y2="36" stroke="rgba(0,200,255,0.35)" stroke-width="0.8"/>
+        <line x1="84" y1="20" x2="84" y2="36" stroke="rgba(0,200,255,0.35)" stroke-width="0.8"/>
+        <line x1="20" y1="84" x2="36" y2="84" stroke="rgba(0,200,255,0.35)" stroke-width="0.8"/>
+        <line x1="36" y1="100" x2="36" y2="84" stroke="rgba(0,200,255,0.35)" stroke-width="0.8"/>
+        <line x1="100" y1="84" x2="84" y2="84" stroke="rgba(0,200,255,0.35)" stroke-width="0.8"/>
+        <line x1="84" y1="100" x2="84" y2="84" stroke="rgba(0,200,255,0.35)" stroke-width="0.8"/>
+        <circle cx="60" cy="60" r="4" fill="url(#gr1)" opacity="0.75"/>
+        <defs>
+          <linearGradient id="gr1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00c8ff"/>
+            <stop offset="100%" stop-color="#8b5cf6"/>
+          </linearGradient>
+          <linearGradient id="gr2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#00c8ff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="badge-row">
+      <span class="badge">Quantum Computing</span>
+      <span class="badge">Topological Architecture</span>
+      <span class="badge emerald">Updated Feb 2026</span>
+    </div>
+
+    <div class="hero-eyebrow">Microsoft Research</div>
+    <h1>Majorana 1</h1>
+    <div class="hero-sub">Revolutionary Topological Quantum Processing Unit</div>
+    <div class="hero-date">Unveiled <span>February 19, 2025</span> &nbsp;·&nbsp; Research continues through 2026</div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <span class="stat-icon">⚛️</span>
+        <div class="stat-value">8</div>
+        <div class="stat-label">Topological Qubits</div>
+        <div class="stat-desc">World's first QPU on Topological Core with inherent error protection</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🎯</span>
+        <div class="stat-value">1M</div>
+        <div class="stat-label">Qubit Target</div>
+        <div class="stat-desc">Blueprint to reach one million qubits on a palm-sized chip</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">⏱️</span>
+        <div class="stat-value">Yrs</div>
+        <div class="stat-label">Not Decades</div>
+        <div class="stat-desc">Microsoft asserts useful quantum computing within years</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🧊</span>
+        <div class="stat-value">New</div>
+        <div class="stat-label">State of Matter</div>
+        <div class="stat-desc">Topoconductors create a topological state beyond solid, liquid, or gas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 DEVELOPMENTS -->
+  <section>
+    <div class="section-label">01 / Recent Updates</div>
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <h2>Developments Since the Announcement</h2>
+    </div>
+
+    <div class="update-banner">
+      <span class="icon">🏗️</span>
+      <div>
+        <strong>November 2025 / World's Largest Quantum Lab Opens in Denmark</strong>
+        <p>Microsoft opened an expanded, state-of-the-art quantum facility in Lyngby, Denmark, now its largest quantum site globally. Total investments in Denmark surpass DKK 1 billion (approx. $140M USD). The new AI-enabled cleanroom enables full fabrication of Majorana chip cores on-site, in collaboration with DTU and the Niels Bohr Institute.</p>
+      </div>
+    </div>
+
+    <div class="update-banner">
+      <span class="icon">🤝</span>
+      <div>
+        <strong>July 2025 / Magne Project: World's First Level 2 Quantum Computer</strong>
+        <p>Microsoft partnered with Atom Computing and Nordic initiative QuNorth (backed by Denmark's EIFO and the Novo Nordisk Foundation with a total EUR 80M investment) to build <strong>Magne</strong>, positioned as the world's first commercially available Level 2 quantum computer. Magne will comprise approximately 50 logical qubits encoded from 1,225-plus physical neutral-atom qubits, combining Atom Computing's hardware with Microsoft's Azure error-correction software. Construction began autumn 2025; operations expected late 2026 or early 2027.</p>
+      </div>
+    </div>
+
+    <div class="update-banner warn">
+      <span class="icon">⚠️</span>
+      <div>
+        <strong>Mid-2025 / Australian Research Team Raises Decoherence Concerns</strong>
+        <p>A pre-print paper on arXiv titled "Decoherence of Majorana Qubits by 1/f Noise" from an Australian research group argued that 1/f noise imposes fundamental limitations on Majorana quasiparticles in semiconductor nanowires, the exact architecture Microsoft is pursuing. The researchers noted decoherence time may be shorter than the time needed to perform a qubit measurement. Microsoft vigorously disputed the findings. Independent verification of the February 2025 results continues across the research community.</p>
+      </div>
+    </div>
+
+    <div class="update-banner info">
+      <span class="icon">🌐</span>
+      <div>
+        <strong>2025 to 2026 / Azure Quantum Integration and DARPA Progress</strong>
+        <p>Microsoft is integrating its quantum roadmap with Azure Quantum, allowing developers to experiment with quantum workloads alongside AI and classical computing resources. The company continues progressing through DARPA's US2QC (Underexplored Systems for Utility-Scale Quantum Computing) program, which targets a fault-tolerant prototype by 2033, though Microsoft has expressed confidence in commercial viability earlier.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 02 CORE FEATURES -->
+  <section>
+    <div class="section-label">02 / Core Technology</div>
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <h2>Core Features and Technology</h2>
+    </div>
+
+    <p>Majorana 1 represents a <mark>paradigm shift in quantum computing architecture</mark>. Unlike traditional superconducting qubits used by Google and IBM, Microsoft's approach leverages topological qubits designed to be inherently more stable and less error-prone. The chip is built using a revolutionary class of materials called <mark>topoconductors (topological superconductors)</mark>, enabling a completely new state of matter beyond the traditional solid, liquid, or gas.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="corner-deco tl"></div><div class="corner-deco br"></div>
+        <h3>Majorana Fermions</h3>
+        <p>The chip utilizes Majorana Zero Modes (MZMs), exotic subatomic quasiparticles first theorized by Ettore Majorana in the 1930s. These particles are created at the ends of superconducting nanowires. For nearly a century they existed only in textbooks; Microsoft can now create and control them on demand.</p>
+      </div>
+      <div class="card">
+        <div class="corner-deco tl"></div><div class="corner-deco br"></div>
+        <h3>Material Composition</h3>
+        <p>Combines <mark>indium arsenide (semiconductor)</mark> and <mark>aluminum (superconductor)</mark>. When cooled to near absolute zero and tuned with magnetic fields, these materials form topological superconducting nanowires hosting MZMs. The measurement approach can detect the difference between one billion and one billion and one electrons in a superconducting wire.</p>
+      </div>
+      <div class="card">
+        <div class="corner-deco tl"></div><div class="corner-deco br"></div>
+        <h3>Topological Protection</h3>
+        <p>Leverages topological protection, which theoretically shields qubits from environmental noise and errors. MZMs store quantum information through parity, whether the wire contains an even or odd number of electrons, making the system inherently more robust.</p>
+      </div>
+      <div class="card">
+        <div class="corner-deco tl"></div><div class="corner-deco br"></div>
+        <h3>Digital Control</h3>
+        <p>Unlike competitors relying on fine-tuned analog control, Majorana 1 uses <mark>digital control</mark>, simplifying the scaling process. Commercially important applications require trillions of operations on a million qubits, a target prohibitive with analog control of each individual qubit.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 ARCHITECTURE -->
+  <section>
+    <div class="section-label">03 / Architecture</div>
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <h2>Architecture and Scalability</h2>
+    </div>
+
+    <p>Topological qubits are structured using <mark>aluminum nanowires arranged in an H shape</mark>. Each H contains four controllable Majoranas, forming a single qubit. These units tile across the chip, offering a modular path to scaling. Microsoft likens this design to the invention of the transistor for classical computing.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>Compact Size</h3>
+        <p>Each qubit occupies approximately 1/100th of a millimeter. The chip integrates both qubits and control electronics, making it compact and suitable for Azure data center deployment.</p>
+      </div>
+      <div class="card">
+        <h3>Modular Scaling</h3>
+        <p>Tiled architecture enables straightforward scaling. Quality over quantity: fewer topological qubits are needed for error correction compared to competitors, potentially thousands versus millions of conventional qubits.</p>
+      </div>
+      <div class="card">
+        <h3>Expanded Manufacturing</h3>
+        <p>Originally fabricated at Microsoft labs in Washington state and Denmark. As of November 2025, the expanded Lyngby facility, now Microsoft's largest quantum site globally, enables full on-site fabrication of the Majorana chip core.</p>
+      </div>
+      <div class="card">
+        <h3>Integrated Electronics</h3>
+        <p>Control electronics integrated directly on chip, reducing latency and simplifying system architecture for practical deployment at scale.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 04 APPLICATIONS -->
+  <section>
+    <div class="section-label">04 / Applications</div>
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <h2>Potential Impact and Applications</h2>
+    </div>
+    <p>Microsoft envisions that a <mark>million-qubit quantum computer</mark> could address major societal challenges currently computationally infeasible for even the most powerful classical supercomputers. All the world's current computers operating together could not do what a one-million-qubit quantum computer would.</p>
+
+    <div class="card-grid">
+      <div class="card"><h3>Drug Discovery</h3><p>Accelerate discovery of new medicines by simulating complex molecular interactions at the quantum level, potentially revolutionizing pharmaceutical development.</p></div>
+      <div class="card"><h3>Sustainable Agriculture</h3><p>Advance fertilizer design and nitrogen fixation processes through optimized quantum simulation, addressing global food security challenges.</p></div>
+      <div class="card"><h3>Materials Science</h3><p>Develop self-healing materials for bridges, construction, manufacturing, and healthcare, with properties impossible to predict using classical methods.</p></div>
+      <div class="card"><h3>Cryptography</h3><p>Revolutionary impact on encryption and cybersecurity. Recent research suggests RSA may require only approximately 1 million qubits to break, down from earlier estimates of 20 million.</p></div>
+      <div class="card"><h3>Energy Solutions</h3><p>Optimize energy storage and distribution systems, accelerating development of more efficient batteries and power grids.</p></div>
+      <div class="card"><h3>Environmental Remediation</h3><p>Break down microplastics into harmless byproducts, a new application Microsoft highlighted in 2025 briefings as an example of real-world quantum utility.</p></div>
+    </div>
+  </section>
+
+  <!-- 05 TIMELINE -->
+  <section>
+    <div class="section-label">05 / Milestones</div>
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <h2>Development Timeline and Milestones</h2>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item past">
+        <div class="tl-date">1930s</div>
+        <div class="tl-title">Theoretical Foundation</div>
+        <div class="tl-body">Ettore Majorana first theorized Majorana fermions. Topological qubits were formally theorized in 1997 by Alexei Kitaev and Michael Freedman.</div>
+      </div>
+      <div class="tl-item past">
+        <div class="tl-date">May 2023</div>
+        <div class="tl-title">Milestone 1: Topological Phase Control</div>
+        <div class="tl-body">Microsoft's first quantum roadmap milestone: engineered devices that induce and control the topological phase of matter bookended by Majorana Zero Modes. Peer-reviewed in the American Physical Society journal.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">February 19, 2025</div>
+        <div class="tl-title">Milestone 2: Majorana 1 Unveiled</div>
+        <div class="tl-body">Microsoft announces the world's first topological QPU with peer-reviewed Nature publication. 8 topological qubits demonstrated. Chip designed to house 1 million qubits. Satya Nadella and Chetan Nayak present at launch.</div>
+      </div>
+      <div class="tl-item new-entry">
+        <div class="tl-date">July 2025</div>
+        <div class="tl-title">Magne / QuNorth Partnership Announced</div>
+        <div class="tl-body">Microsoft and Atom Computing selected by Nordic initiative QuNorth (EUR 80M investment by EIFO and Novo Nordisk Foundation) to build Magne, projected as the world's first commercially available Level 2 (logical-qubit) quantum computer, with approximately 50 logical qubits and 1,225-plus physical neutral-atom qubits. Slated for Copenhagen.</div>
+      </div>
+      <div class="tl-item new-entry">
+        <div class="tl-date">Autumn 2025</div>
+        <div class="tl-title">Magne Construction Begins</div>
+        <div class="tl-body">Physical construction of Magne begins. Microsoft provides the operating system, cloud integration via Azure, developer tools, and AI agents as a full-stack quantum solution. Atom Computing supplies neutral-atom hardware.</div>
+      </div>
+      <div class="tl-item new-entry">
+        <div class="tl-date">November 2025</div>
+        <div class="tl-title">Denmark Quantum Lab Expansion</div>
+        <div class="tl-body">Microsoft opens expanded Lyngby, Denmark facility, now its largest quantum site globally. Total Danish investment surpasses DKK 1 billion. New AI-enabled cleanroom enables full on-site Majorana chip core fabrication. Partners: DTU and Niels Bohr Institute.</div>
+      </div>
+      <div class="tl-item future">
+        <div class="tl-date">2025 to 2027</div>
+        <div class="tl-title">Research and Scaling Phase</div>
+        <div class="tl-body">Collaboration with universities and national labs continues. Target: scale to a few hundred qubits before commercial deployment discussions. Independent verification of Majorana fermion claims ongoing.</div>
+      </div>
+      <div class="tl-item future">
+        <div class="tl-date">Late 2026 / Early 2027</div>
+        <div class="tl-title">Magne Operational</div>
+        <div class="tl-body">Magne quantum computer expected to become operational at QuNorth in Copenhagen, the first commercially accessible Level 2 quantum system powered by logical qubits. Nordic researchers and industry to gain priority access.</div>
+      </div>
+      <div class="tl-item future">
+        <div class="tl-date">By 2033</div>
+        <div class="tl-title">DARPA US2QC Goal</div>
+        <div class="tl-body">DARPA program targets a fault-tolerant quantum computing prototype. Microsoft is confident in achieving commercial viability earlier as part of the final phase of the US2QC program.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 06 COMPETITIVE LANDSCAPE -->
+  <section>
+    <div class="section-label">06 / Competition</div>
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <h2>Competitive Landscape (Updated 2026)</h2>
+    </div>
+
+    <p>The quantum computing race has intensified significantly since Majorana 1's debut. All major players have achieved milestones while pursuing fundamentally different architectures.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Company / System</th>
+            <th>Approach</th>
+            <th>Current Qubits</th>
+            <th>Key Differentiator</th>
+            <th>Target Timeline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Microsoft</strong><br><span style="color:var(--muted);font-size:11px;">Majorana 1 + Magne</span></td>
+            <td><span class="tag">Topological</span></td>
+            <td>8 topological qubits (Majorana 1); Magne: 50 logical / 1,225-plus physical neutral-atom</td>
+            <td>Inherent hardware error protection; digital control; logical-qubit system (Magne) operational by late 2026</td>
+            <td>Years to commercial utility; Magne approx. late 2026</td>
+          </tr>
+          <tr>
+            <td><strong>Google</strong><br><span style="color:var(--muted);font-size:11px;">Willow</span></td>
+            <td><span class="tag purple">Superconducting</span></td>
+            <td>105 qubits; scaling toward 1,000-plus</td>
+            <td>First system to achieve "below threshold" error correction. Completed in approx. 5 minutes what would take classical supercomputers 10 to the power of 25 years.</td>
+            <td>Useful error-corrected system by approx. 2029</td>
+          </tr>
+          <tr>
+            <td><strong>IBM</strong><br><span style="color:var(--muted);font-size:11px;">Nighthawk / Loon / Kookaburra</span></td>
+            <td><span class="tag purple">Superconducting</span></td>
+            <td>120-qubit Nighthawk (2025); 1,386-qubit Kookaburra planned 2026; 4,158-qubit multi-chip system in view</td>
+            <td>Targets verified quantum advantage by end of 2026 using Nighthawk; fault-tolerant Quantum Starling (200 logical qubits, 100M gate circuits) by 2029; Blue Jay approx. 2,000 logical qubits by 2033</td>
+            <td>Quantum advantage end-2026; fault-tolerant 2029</td>
+          </tr>
+          <tr>
+            <td><strong>IonQ</strong></td>
+            <td><span class="tag green">Trapped Ion</span></td>
+            <td>64 qubits (2026, 2x growth from 2024); roadmap: 1,600 logical qubits by 2028</td>
+            <td>Coherence times approx. 100x longer than superconducting; photonic interconnects for quantum networking; acquired Oxford Ionics (approx. $1.075B) for 2M-plus physical qubits by 2030</td>
+            <td>Fault-tolerant systems 2028 to 2030</td>
+          </tr>
+          <tr>
+            <td><strong>Atom Computing</strong></td>
+            <td><span class="tag orange">Neutral Atom</span></td>
+            <td>1,225 physical qubits; building Magne (50 logical qubits)</td>
+            <td>Highest physical qubit count among commercially deployed systems; partnering with Microsoft on world's first Level 2 quantum computer</td>
+            <td>Magne operational late 2026</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h3>Quality Over Quantity: Still Microsoft's Core Argument</h3>
+      <p>While competitors boast higher qubit counts, Microsoft's topological approach prioritizes qubit stability. The company argues topological qubits will require dramatically fewer total qubits for practical applications due to lower inherent error rates, potentially thousands of topological qubits where competitors might need millions of conventional qubits. Meanwhile, Magne represents Microsoft's near-term bridge: a logical-qubit machine built on a partner's neutral-atom hardware, operational by late 2026.</p>
+    </div>
+  </section>
+
+  <!-- 07 SCIENTIFIC VALIDATION -->
+  <section>
+    <div class="section-label">07 / Validation</div>
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <h2>Scientific Validation and Ongoing Skepticism</h2>
+    </div>
+
+    <div class="status-pill">Research Platform: Not Yet Commercially Available</div>
+
+    <div class="card">
+      <h3>Research Backing</h3>
+      <p><strong>Peer-Reviewed Publication:</strong> Microsoft published in <em>Nature</em> detailing Majorana chip development, including observation and control of Majorana fermions. Physicists such as Steven Simon (University of Oxford) described the results as "pretty good." Additional data was shared with select experts at a meeting in Santa Barbara, California.</p>
+      <p><strong>Expert Acknowledgment:</strong> Travis Humble, Director of the Quantum Science Center at Oak Ridge National Laboratory, called the results "important progress" and described them as "a first step toward validating topological protection." QSC is one of five national quantum research centers with a mission in topological quantum materials.</p>
+    </div>
+
+    <div class="warn-card">
+      <h3>Scientific Caution: Key Limitations Remain</h3>
+      <p><strong>Not Definitive Proof:</strong> The February 2025 Nature paper itself states measurements "do not, by themselves, determine whether the low-energy states detected by interferometry are topological." The current results are consistent with Andreev modes (which are topologically trivial), not exclusively Majorana modes.</p>
+      <p><strong>No Coherent Operations Demonstrated:</strong> The publicly available demonstration does not test coherence of the two-level quantum system, in contrast to other QPUs, which typically demonstrate both coherent quantum information and coherent logical operations.</p>
+    </div>
+
+    <div class="danger-card">
+      <h3>2025 Decoherence Challenge (New)</h3>
+      <p>An Australian research team published a pre-print (arXiv) arguing 1/f noise creates decoherence times shorter than the time required to perform a qubit measurement (currently 32.5 microseconds vs. Microsoft's 1 microsecond roadmap target). If verified, this would represent a significant hurdle. Microsoft vigorously disagreed. Gartner VP analyst Mark Horvath noted: "If the result holds up, it would certainly make the already challenging path to topological qubits significantly harder." Independent verification is ongoing.</p>
+    </div>
+
+    <div class="warn-card">
+      <h3>Historical Context</h3>
+      <p>A 2018 Microsoft-funded study claiming Majorana states was retracted after data was shown to be consistent with Andreev modes, the same interpretive challenge that complicates evaluating the current 2025 results. Experts Daniel Loss and Vincent Mourik have called for further experiments and more detailed public data to confirm capabilities.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 08 CURRENT STATUS -->
+  <section>
+    <div class="section-label">08 / Status</div>
+    <div class="section-header">
+      <div class="section-num">08</div>
+      <h2>Current Status and Next Steps (February 2026)</h2>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>Research Platform</h3>
+        <p>Majorana 1 remains a research platform as of February 2026, not available through Azure Quantum for public use. Microsoft continues collaboration with universities and national labs. An executive noted a Microsoft quantum chip could potentially be available through Azure before 2030.</p>
+      </div>
+      <div class="card">
+        <h3>Scaling Roadmap</h3>
+        <p>The company aims to reach a few hundred topological qubits before discussing commercial reliability. This intermediate milestone is critical for validating the topological approach at scale.</p>
+      </div>
+      <div class="card">
+        <h3>Denmark as Global Hub</h3>
+        <p>The expanded Lyngby lab (November 2025) is now Microsoft's largest quantum site globally, with full Majorana chip core fabrication capability. Partners include the Niels Bohr Institute and DTU. Aligned with the EU's Quantum Europe Strategy targeting global quantum leadership by 2030.</p>
+      </div>
+      <div class="card">
+        <h3>Strategic Partnerships</h3>
+        <p>Part of DARPA's US2QC program. The QuNorth partnership for Magne (Microsoft and Atom Computing) represents the company's first real-world deployment of logical-qubit quantum computing, slated for late 2026 or early 2027 in Copenhagen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 TAKEAWAYS -->
+  <section>
+    <div class="section-label">09 / Takeaways</div>
+    <div class="section-header">
+      <div class="section-num">09</div>
+      <h2>Key Takeaways</h2>
+    </div>
+    <div class="takeaway-grid">
+      <div class="takeaway">
+        <span class="takeaway-icon">🚀</span>
+        <h3>Revolutionary Approach</h3>
+        <p>Majorana 1 introduces a fundamentally different quantum architecture using topological protection. If validated at scale, it could solve error correction challenges that have plagued the field for decades.</p>
+      </div>
+      <div class="takeaway">
+        <span class="takeaway-icon">🏗️</span>
+        <h3>Infrastructure Investment</h3>
+        <p>Denmark now hosts Microsoft's largest quantum site globally (DKK 1B-plus). Magne, the world's first Level 2 logical-qubit computer, is under construction with operations expected by late 2026.</p>
+      </div>
+      <div class="takeaway">
+        <span class="takeaway-icon">⚖️</span>
+        <h3>Balanced Perspective</h3>
+        <p>The technology is peer-reviewed but not definitively proven. The Andreev modes ambiguity, the 2018 retraction history, and the new 2025 decoherence challenge all warrant appropriate skepticism alongside genuine excitement.</p>
+      </div>
+      <div class="takeaway">
+        <span class="takeaway-icon">⏰</span>
+        <h3>Timeline Reality</h3>
+        <p>Microsoft's "years, not decades" assertion remains ambitious. The next 2 to 3 years, including Magne's operation and further qubit scaling, will be critical validation points for the entire topological approach.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <span class="footer-name">Sky Sharma</span>
+    <span class="footer-title">CISO &amp; Cyber Leader &nbsp;|&nbsp; Cognitive Innovator &nbsp;|&nbsp; AI, Quantum &amp; Data Ethics Expert &nbsp;|&nbsp; Driving Global Impact</span>
+    <p class="footer-desc">Analysis of Microsoft's Majorana 1 quantum chip announcement, examining the technology, competitive landscape, and implications for the future of quantum computing and its transformative potential across industries.</p>
+    <div class="last-updated">Content updated February 2026 / Incorporating developments through Q4 2025</div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes, tick = 0;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function initNodes() {
+    nodes = [];
+    const count = Math.floor((W * H) / 16000);
+    for (let i = 0; i < count; i++) {
+      nodes.push({
+        x:     Math.random() * W,
+        y:     Math.random() * H,
+        vx:    (Math.random() - 0.5) * 0.16,
+        vy:    (Math.random() - 0.5) * 0.16,
+        r:     Math.random() * 1.1 + 0.4,
+        color: Math.random() > 0.5 ? [0,200,255] : [139,92,246],
+        pulse: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    tick += 0.007;
+
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 130) {
+          const alpha = (1 - dist / 130) * 0.1;
+          const [r,g,b] = nodes[i].color;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    for (const n of nodes) {
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+      const brightness = 0.5 + 0.5 * Math.sin(tick * 1.4 + n.pulse);
+      const [r,g,b] = n.color;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${b},${brightness})`;
+      ctx.fill();
+    }
+
+    // Traveling scan pulse
+    const scanY = (tick * 55) % H;
+    const sg = ctx.createLinearGradient(0, scanY - 55, 0, scanY + 55);
+    sg.addColorStop(0,   'rgba(0,200,255,0)');
+    sg.addColorStop(0.5, 'rgba(0,200,255,0.018)');
+    sg.addColorStop(1,   'rgba(0,200,255,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(0, scanY - 55, W, 110);
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); initNodes(); });
+  resize();
+  initNodes();
+  draw();
+})();
+</script>
+
+</body>
+</html>
