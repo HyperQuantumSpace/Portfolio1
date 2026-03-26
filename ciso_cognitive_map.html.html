@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CISO Cognitive Map — Sky Sharma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #050a0f;
+    --bg-secondary: #080d14;
+    --bg-card: #0a1219;
+    --bg-card-hover: #0d1820;
+    --border-default: rgba(0,200,255,0.15);
+    --border-active: rgba(0,200,255,0.45);
+    --cyan: #00c8ff;
+    --cyan-dim: rgba(0,200,255,0.6);
+    --cyan-glow: rgba(0,200,255,0.12);
+    --gold: #f5c542;
+    --gold-dim: rgba(245,197,66,0.7);
+    --gold-glow: rgba(245,197,66,0.1);
+    --red: #ff3c5c;
+    --green: #00ff9d;
+    --purple: #b060ff;
+    --orange: #ff8c42;
+
+    /* NIST AI RMF colors */
+    --govern: #7b52f5;
+    --govern-glow: rgba(123,82,245,0.18);
+    --map: #00c8ff;
+    --map-glow: rgba(0,200,255,0.15);
+    --measure: #f5c542;
+    --measure-glow: rgba(245,197,66,0.15);
+    --manage: #00ff9d;
+    --manage-glow: rgba(0,255,157,0.15);
+
+    --text-primary: #e8f4ff;
+    --text-secondary: rgba(200,225,255,0.65);
+    --text-dim: rgba(150,185,220,0.45);
+    --font-head: 'Orbitron', monospace;
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-body: 'Exo 2', sans-serif;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Animated grid background ── */
+  body::before {
+    content:'';
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    animation: gridDrift 80s linear infinite;
+  }
+  @keyframes gridDrift { from{background-position:0 0} to{background-position:48px 48px} }
+
+  body::after {
+    content:'';
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,100,200,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(123,82,245,0.06) 0%, transparent 70%);
+  }
+
+  /* ── Page wrapper ── */
+  .page { position:relative; z-index:1; max-width:1400px; margin:0 auto; padding:0 24px 80px; }
+
+  /* ── Header ── */
+  .header {
+    text-align:center;
+    padding: 60px 20px 40px;
+    position:relative;
+  }
+  .header-watermark {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--cyan-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity:0.8;
+  }
+  .header-name {
+    font-family: var(--font-head);
+    font-size: clamp(28px,5vw,52px);
+    font-weight: 900;
+    letter-spacing: 6px;
+    color: var(--cyan);
+    text-shadow: 0 0 30px rgba(0,200,255,0.5), 0 0 60px rgba(0,200,255,0.2);
+    margin-bottom: 10px;
+  }
+  .header-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    line-height: 2;
+  }
+  .header-divider {
+    width: 300px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    margin: 0 auto 28px;
+  }
+  .header-map-title {
+    font-family: var(--font-head);
+    font-size: clamp(18px,3vw,28px);
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .header-subtitle {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text-secondary);
+    letter-spacing:1px;
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin: 32px 0 48px;
+  }
+  .stat-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 120px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .stat-item:hover {
+    border-color: var(--border-active);
+    background: var(--bg-card-hover);
+  }
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--cyan);
+    text-shadow: 0 0 12px rgba(0,200,255,0.4);
+    display: block;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    display: block;
+    margin-top: 4px;
+  }
+
+  /* ── Section headers ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 56px 0 24px;
+  }
+  .section-header::before, .section-header::after {
+    content:'';
+    flex:1; height:1px;
+    background: linear-gradient(90deg, transparent, var(--border-active));
+  }
+  .section-header::after {
+    background: linear-gradient(90deg, var(--border-active), transparent);
+  }
+  .section-label {
+    font-family: var(--font-head);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  /* ── NIST AI RMF Hero Banner ── */
+  .ai-rmf-banner {
+    background: linear-gradient(135deg, rgba(123,82,245,0.12) 0%, rgba(0,200,255,0.08) 50%, rgba(0,255,157,0.06) 100%);
+    border: 1px solid rgba(123,82,245,0.4);
+    border-radius: 2px;
+    padding: 32px 36px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-rmf-banner::before {
+    content:'NIST AI RMF 1.0';
+    position:absolute; right:24px; top:16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(123,82,245,0.5);
+    text-transform:uppercase;
+  }
+  .ai-rmf-banner-title {
+    font-family: var(--font-head);
+    font-size: clamp(16px,2.5vw,22px);
+    font-weight: 900;
+    color: var(--govern);
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(123,82,245,0.4);
+  }
+  .ai-rmf-banner-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 820px;
+    margin-bottom: 20px;
+  }
+  .ai-rmf-banner-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .rmf-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .rmf-tag.govern { background: rgba(123,82,245,0.2); color: var(--govern); border: 1px solid rgba(123,82,245,0.4); }
+  .rmf-tag.map    { background: rgba(0,200,255,0.15); color: var(--map); border: 1px solid rgba(0,200,255,0.35); }
+  .rmf-tag.measure{ background: rgba(245,197,66,0.15); color: var(--measure); border: 1px solid rgba(245,197,66,0.35); }
+  .rmf-tag.manage { background: rgba(0,255,157,0.12); color: var(--manage); border: 1px solid rgba(0,255,157,0.3); }
+
+  /* ── NIST AI RMF 4-Function Grid ── */
+  .rmf-functions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+  @media(max-width:900px){ .rmf-functions-grid { grid-template-columns:1fr 1fr; } }
+  @media(max-width:540px){ .rmf-functions-grid { grid-template-columns:1fr; } }
+
+  .rmf-function-card {
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+  .rmf-function-card:hover { transform: translateY(-3px); }
+
+  .rmf-function-card.govern {
+    background: linear-gradient(160deg, rgba(123,82,245,0.15), rgba(123,82,245,0.05));
+    border: 1px solid rgba(123,82,245,0.35);
+  }
+  .rmf-function-card.govern:hover { box-shadow: 0 8px 32px rgba(123,82,245,0.2); }
+
+  .rmf-function-card.map {
+    background: linear-gradient(160deg, rgba(0,200,255,0.12), rgba(0,200,255,0.04));
+    border: 1px solid rgba(0,200,255,0.3);
+  }
+  .rmf-function-card.map:hover { box-shadow: 0 8px 32px rgba(0,200,255,0.15); }
+
+  .rmf-function-card.measure {
+    background: linear-gradient(160deg, rgba(245,197,66,0.12), rgba(245,197,66,0.04));
+    border: 1px solid rgba(245,197,66,0.3);
+  }
+  .rmf-function-card.measure:hover { box-shadow: 0 8px 32px rgba(245,197,66,0.15); }
+
+  .rmf-function-card.manage {
+    background: linear-gradient(160deg, rgba(0,255,157,0.1), rgba(0,255,157,0.03));
+    border: 1px solid rgba(0,255,157,0.25);
+  }
+  .rmf-function-card.manage:hover { box-shadow: 0 8px 32px rgba(0,255,157,0.12); }
+
+  .rmf-fn-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .rmf-fn-name {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+  }
+  .rmf-fn-name.govern { color: var(--govern); text-shadow: 0 0 15px rgba(123,82,245,0.4); }
+  .rmf-fn-name.map    { color: var(--map);    text-shadow: 0 0 15px rgba(0,200,255,0.4); }
+  .rmf-fn-name.measure{ color: var(--measure);text-shadow: 0 0 15px rgba(245,197,66,0.4); }
+  .rmf-fn-name.manage { color: var(--manage); text-shadow: 0 0 15px rgba(0,255,157,0.4); }
+
+  .rmf-fn-subtitle {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+  }
+
+  .rmf-fn-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .rmf-fn-items li {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    padding-left: 14px;
+    position: relative;
+  }
+  .rmf-fn-items li::before {
+    content: '▸';
+    position: absolute; left:0;
+    font-size: 9px;
+    top: 2px;
+  }
+  .rmf-function-card.govern .rmf-fn-items li::before { color: var(--govern); }
+  .rmf-function-card.map    .rmf-fn-items li::before { color: var(--map); }
+  .rmf-function-card.measure .rmf-fn-items li::before { color: var(--measure); }
+  .rmf-function-card.manage .rmf-fn-items li::before { color: var(--manage); }
+
+  .rmf-fn-subcats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .rmf-subcat {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .govern .rmf-subcat { background: rgba(123,82,245,0.2); color: rgba(180,150,255,0.9); border:1px solid rgba(123,82,245,0.25); }
+  .map    .rmf-subcat { background: rgba(0,200,255,0.15); color: rgba(100,220,255,0.9); border:1px solid rgba(0,200,255,0.25); }
+  .measure .rmf-subcat{ background: rgba(245,197,66,0.15); color: rgba(255,215,100,0.9); border:1px solid rgba(245,197,66,0.25); }
+  .manage  .rmf-subcat{ background: rgba(0,255,157,0.12); color: rgba(100,255,180,0.9); border:1px solid rgba(0,255,157,0.2); }
+
+  /* ── AI RMF CISO Integration Map (the cross-domain table) ── */
+  .rmf-integration-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 32px;
+  }
+  @media(max-width:900px){ .rmf-integration-grid { grid-template-columns:1fr; } }
+
+  .rmf-int-header {
+    padding: 12px 16px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .rmf-int-header.domain-col { color: var(--text-dim); background: var(--bg-card); border:1px solid var(--border-default); }
+  .rmf-int-header.govern-col { color: var(--govern); background: rgba(123,82,245,0.1); border:1px solid rgba(123,82,245,0.3); }
+  .rmf-int-header.map-col    { color: var(--map);    background: rgba(0,200,255,0.08); border:1px solid rgba(0,200,255,0.25); }
+  .rmf-int-header.measure-col{ color: var(--measure); background: rgba(245,197,66,0.08); border:1px solid rgba(245,197,66,0.25); }
+  .rmf-int-header.manage-col { color: var(--manage);  background: rgba(0,255,157,0.07); border:1px solid rgba(0,255,157,0.2); }
+
+  .rmf-int-domain {
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rmf-int-cell {
+    padding: 12px 14px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    border: 1px solid;
+  }
+  .rmf-int-cell.govern-cell { background: rgba(123,82,245,0.05); border-color: rgba(123,82,245,0.15); }
+  .rmf-int-cell.map-cell    { background: rgba(0,200,255,0.04);  border-color: rgba(0,200,255,0.12); }
+  .rmf-int-cell.measure-cell{ background: rgba(245,197,66,0.04); border-color: rgba(245,197,66,0.12); }
+  .rmf-int-cell.manage-cell { background: rgba(0,255,157,0.03);  border-color: rgba(0,255,157,0.1); }
+
+  /* ── Main domain cards grid ── */
+  .domains-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+  @media(max-width:1100px){ .domains-grid { grid-template-columns:1fr 1fr; } }
+  @media(max-width:640px) { .domains-grid { grid-template-columns:1fr; } }
+
+  .domain-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    padding: 26px 24px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, background 0.3s, transform 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+  .domain-card:hover {
+    border-color: var(--border-active);
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,200,255,0.08);
+  }
+
+  /* ── AI Security card — special highlight ── */
+  .domain-card.ai-security-card {
+    border-color: rgba(123,82,245,0.4);
+    background: linear-gradient(160deg, rgba(123,82,245,0.08), var(--bg-card));
+    grid-column: span 1;
+  }
+  .domain-card.ai-security-card:hover {
+    border-color: rgba(123,82,245,0.7);
+    box-shadow: 0 8px 40px rgba(123,82,245,0.18);
+  }
+
+  .domain-card::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .domain-card:hover::before { opacity:1; }
+  .domain-card.ai-security-card::before {
+    background: linear-gradient(90deg, transparent, var(--govern), transparent);
+    opacity: 0.6;
+  }
+
+  .domain-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .domain-title {
+    font-family: var(--font-head);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .domain-card.ai-security-card .domain-title { color: var(--govern); }
+  .domain-subtitle {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .domain-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .domain-list li {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    padding-left: 14px;
+    position: relative;
+  }
+  .domain-list li::before {
+    content:'▸';
+    position:absolute; left:0; top:2px;
+    font-size: 8px;
+    color: var(--cyan-dim);
+  }
+  .domain-card.ai-security-card .domain-list li::before { color: rgba(123,82,245,0.7); }
+
+  .domain-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    background: rgba(0,200,255,0.1);
+    color: var(--cyan-dim);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .tag.rmf-linked {
+    background: rgba(123,82,245,0.2);
+    color: rgba(180,150,255,0.95);
+    border-color: rgba(123,82,245,0.4);
+  }
+  .tag.rmf-govern { background: rgba(123,82,245,0.2); color: #c4a8ff; border-color: rgba(123,82,245,0.4); }
+  .tag.rmf-map    { background: rgba(0,200,255,0.15); color: #80deff; border-color: rgba(0,200,255,0.35); }
+  .tag.rmf-measure{ background: rgba(245,197,66,0.15); color: #ffd87a; border-color: rgba(245,197,66,0.35); }
+  .tag.rmf-manage { background: rgba(0,255,157,0.12); color: #70ffcc; border-color: rgba(0,255,157,0.3); }
+
+  /* ── AI RMF inline callout inside a domain card ── */
+  .rmf-callout {
+    margin: 14px 0 0;
+    padding: 12px 14px;
+    background: rgba(123,82,245,0.1);
+    border-left: 3px solid var(--govern);
+    border-radius: 0 2px 2px 0;
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .rmf-callout-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--govern);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .rmf-callout ul { list-style:none; display:flex; flex-direction:column; gap:4px; }
+  .rmf-callout ul li { padding-left:12px; position:relative; }
+  .rmf-callout ul li::before { content:'·'; position:absolute; left:0; color:var(--govern); font-size:14px; top:-2px; }
+
+  /* ── Lifecycle strip ── */
+  .lifecycle-strip {
+    display: flex;
+    gap: 2px;
+    margin: 48px 0 32px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .lifecycle-strip::-webkit-scrollbar { height:4px; background:var(--bg-secondary); }
+  .lifecycle-strip::-webkit-scrollbar-thumb { background:var(--border-default); }
+
+  .lifecycle-step {
+    flex: 1;
+    min-width: 140px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    padding: 18px 16px;
+    text-align: center;
+    position: relative;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .lifecycle-step:hover {
+    border-color: var(--border-active);
+    background: var(--bg-card-hover);
+  }
+  .lifecycle-step::after {
+    content: '▶';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: var(--border-default);
+    z-index:2;
+  }
+  .lifecycle-step:last-child::after { display:none; }
+  .lifecycle-step-icon { font-size: 20px; margin-bottom: 8px; }
+  .lifecycle-step-name {
+    font-family: var(--font-head);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .lifecycle-step-desc {
+    font-size: 10px;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+
+  /* ── NIST AI RMF Lifecycle (6-step loop for AI) ── */
+  .ai-rmf-lifecycle {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
+    margin-bottom: 32px;
+  }
+  @media(max-width:1000px){ .ai-rmf-lifecycle { grid-template-columns: repeat(3,1fr); } }
+  @media(max-width:600px) { .ai-rmf-lifecycle { grid-template-columns: repeat(2,1fr); } }
+
+  .ai-rmf-step {
+    padding: 20px 16px;
+    position: relative;
+    text-align: center;
+    border: 1px solid;
+    transition: transform 0.3s;
+  }
+  .ai-rmf-step:hover { transform: translateY(-3px); }
+
+  .ai-rmf-step.s1 { background: rgba(123,82,245,0.1); border-color: rgba(123,82,245,0.3); }
+  .ai-rmf-step.s2 { background: rgba(123,82,245,0.08); border-color: rgba(123,82,245,0.25); }
+  .ai-rmf-step.s3 { background: rgba(0,200,255,0.08); border-color: rgba(0,200,255,0.25); }
+  .ai-rmf-step.s4 { background: rgba(245,197,66,0.08); border-color: rgba(245,197,66,0.25); }
+  .ai-rmf-step.s5 { background: rgba(245,197,66,0.06); border-color: rgba(245,197,66,0.2); }
+  .ai-rmf-step.s6 { background: rgba(0,255,157,0.07); border-color: rgba(0,255,157,0.2); }
+
+  .ai-rmf-step-num {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 4px;
+    line-height:1;
+  }
+  .s1 .ai-rmf-step-num, .s2 .ai-rmf-step-num { color: var(--govern); text-shadow: 0 0 12px rgba(123,82,245,0.4); }
+  .s3 .ai-rmf-step-num { color: var(--map); text-shadow: 0 0 12px rgba(0,200,255,0.4); }
+  .s4 .ai-rmf-step-num, .s5 .ai-rmf-step-num { color: var(--measure); text-shadow: 0 0 12px rgba(245,197,66,0.4); }
+  .s6 .ai-rmf-step-num { color: var(--manage); text-shadow: 0 0 12px rgba(0,255,157,0.4); }
+
+  .ai-rmf-step-fn {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+  .ai-rmf-step-title {
+    font-family: var(--font-head);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .s1 .ai-rmf-step-title,.s2 .ai-rmf-step-title { color: #c4a8ff; }
+  .s3 .ai-rmf-step-title { color: #80deff; }
+  .s4 .ai-rmf-step-title,.s5 .ai-rmf-step-title { color: #ffd87a; }
+  .s6 .ai-rmf-step-title { color: #70ffcc; }
+
+  .ai-rmf-step-items {
+    list-style:none;
+    text-align:left;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+  }
+  .ai-rmf-step-items li {
+    font-size: 10px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    padding-left: 12px;
+    position: relative;
+  }
+  .ai-rmf-step-items li::before {
+    content:'·';
+    position:absolute; left:0;
+    font-size:14px; top:-3px;
+  }
+  .s1 .ai-rmf-step-items li::before,.s2 .ai-rmf-step-items li::before { color:var(--govern); }
+  .s3 .ai-rmf-step-items li::before { color:var(--map); }
+  .s4 .ai-rmf-step-items li::before,.s5 .ai-rmf-step-items li::before { color:var(--measure); }
+  .s6 .ai-rmf-step-items li::before { color:var(--manage); }
+
+  /* ── AI Risk Categories panel ── */
+  .ai-risk-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 32px;
+  }
+  @media(max-width:900px){ .ai-risk-grid { grid-template-columns:1fr 1fr; } }
+
+  .ai-risk-card {
+    padding: 20px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    transition: border-color 0.3s;
+  }
+  .ai-risk-card:hover { border-color: var(--border-active); }
+  .ai-risk-icon { font-size: 18px; margin-bottom: 8px; }
+  .ai-risk-title {
+    font-family: var(--font-head);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .ai-risk-items { list-style:none; display:flex; flex-direction:column; gap:5px; }
+  .ai-risk-items li {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    padding-left: 12px;
+    position: relative;
+  }
+  .ai-risk-items li::before { content:'▸'; position:absolute; left:0; top:1px; font-size:8px; color:var(--cyan-dim); }
+
+  /* ── Maturity bar chart ── */
+  .maturity-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin-bottom: 32px;
+  }
+  @media(max-width:640px){ .maturity-grid { grid-template-columns:1fr; } }
+
+  .maturity-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    padding: 20px 22px;
+  }
+  .maturity-title {
+    font-family: var(--font-head);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .maturity-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .maturity-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    width: 180px;
+    flex-shrink: 0;
+  }
+  .maturity-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .maturity-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--cyan), rgba(0,200,255,0.5));
+    position: relative;
+    transition: width 0.8s ease;
+  }
+  .maturity-bar-fill.rmf-fill {
+    background: linear-gradient(90deg, var(--govern), rgba(123,82,245,0.5));
+  }
+  .maturity-pct {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--cyan);
+    width: 36px;
+    text-align: right;
+  }
+  .maturity-pct.rmf-pct { color: var(--govern); }
+
+  /* ── AI RMF Trustworthy AI properties ── */
+  .trustworthy-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    margin-bottom: 32px;
+  }
+  @media(max-width:900px){ .trustworthy-grid { grid-template-columns:1fr 1fr; } }
+
+  .trustworthy-card {
+    padding: 18px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .trustworthy-card:hover { transform:translateY(-2px); border-color: var(--border-active); }
+  .trustworthy-icon { font-size: 22px; margin-bottom: 8px; }
+  .trustworthy-name {
+    font-family: var(--font-head);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--govern);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .trustworthy-desc {
+    font-size: 10px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── Stakeholder org ── */
+  .org-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    padding: 36px 24px;
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .org-pulse {
+    position:absolute; inset:0;
+    background: radial-gradient(circle at 50% 50%, rgba(0,200,255,0.04) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .org-board {
+    display: inline-block;
+    padding: 10px 20px;
+    background: rgba(0,200,255,0.1);
+    border: 1px solid rgba(0,200,255,0.3);
+    font-family: var(--font-head);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .org-board-sub {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+  .org-connector-v {
+    width: 1px; height: 24px;
+    background: rgba(0,200,255,0.3);
+    margin: 0 auto 4px;
+  }
+  .org-ceo {
+    display: inline-block;
+    padding: 10px 20px;
+    background: rgba(0,200,255,0.08);
+    border: 1px solid rgba(0,200,255,0.25);
+    font-family: var(--font-head);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--cyan-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .org-report-label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .org-ciso-node {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, rgba(0,200,255,0.15), rgba(0,200,255,0.05));
+    border: 2px solid rgba(0,200,255,0.6);
+    font-family: var(--font-head);
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    text-shadow: 0 0 16px rgba(0,200,255,0.5);
+    margin-bottom: 6px;
+    box-shadow: 0 0 30px rgba(0,200,255,0.12);
+  }
+  .org-row {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .org-peer, .org-direct {
+    padding: 8px 12px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .org-peer {
+    background: rgba(245,197,66,0.08);
+    border: 1px solid rgba(245,197,66,0.2);
+    color: var(--gold-dim);
+  }
+  .org-direct {
+    background: rgba(0,200,255,0.06);
+    border: 1px solid rgba(0,200,255,0.18);
+    color: var(--text-dim);
+    min-width: 100px;
+  }
+
+  /* ── REPORTING STRUCTURE (original) ── */
+  .reporting-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+  .org-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .org-level {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: relative;
+    width: 100%;
+  }
+  .org-node {
+    background: var(--bg-card);
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 10px 16px;
+    text-align: center;
+    position: relative;
+  }
+  .org-title {
+    font-family: var(--font-head);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .org-role {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .org-connector {
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(to bottom, rgba(0,180,255,0.4), rgba(0,180,255,0.1));
+    margin: 0 auto;
+  }
+  .org-horiz-line {
+    height: 2px;
+    width: 70%;
+    background: rgba(0,180,255,0.15);
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    border-top: 1px solid var(--border-default);
+    padding: 28px 0;
+    text-align: center;
+    margin-top: 60px;
+  }
+  .footer-name {
+    font-family: var(--font-head);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    margin-bottom: 8px;
+  }
+  .footer-subtitle {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    line-height: 2;
+  }
+  .footer-copyright {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 12px;
+  }
+
+  /* ── Scroll animations ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══════════════ HEADER ══════════════ -->
+  <header class="header">
+    <div class="header-watermark">Sky Sharma · CISO &amp; Cyber Leader · Cognitive Innovator · AI · Quantum · Data Ethics Expert</div>
+    <div class="header-name">SKY SHARMA</div>
+    <div class="header-title">
+      CISO &amp; Cyber Leader &nbsp;·&nbsp; Cognitive Innovator<br>
+      AI · Quantum · Data Ethics Expert · Driving Global Impact
+    </div>
+    <div class="header-divider"></div>
+    <div class="header-map-title">CISO COGNITIVE MAP</div>
+    <div class="header-subtitle">The Complete Mental Model of Modern Cybersecurity Leadership</div>
+  </header>
+
+  <!-- ══════════════ STATS ══════════════ -->
+  <div class="stats-bar fade-up">
+    <div class="stat-item"><span class="stat-num">12</span><span class="stat-label">Core Domains</span></div>
+    <div class="stat-item"><span class="stat-num">80+</span><span class="stat-label">Responsibilities</span></div>
+    <div class="stat-item"><span class="stat-num">7</span><span class="stat-label">Lifecycle Phases</span></div>
+    <div class="stat-item"><span class="stat-num">360°</span><span class="stat-label">Stakeholder View</span></div>
+    <div class="stat-item"><span class="stat-num">24/7</span><span class="stat-label">Operational Tempo</span></div>
+    <div class="stat-item"><span class="stat-num">∞</span><span class="stat-label">Risk Surface</span></div>
+  </div>
+
+  <!-- ══════════════ 12 CISO CORE DOMAINS ══════════════ -->
+  <div style="text-align:center; margin: 48px 0 32px; position:relative;">
+    <div style="display:inline-flex; flex-direction:column; align-items:center; gap:10px;">
+      <div style="font-size:48px; filter: drop-shadow(0 0 18px rgba(0,200,255,0.5));">🛡️</div>
+      <div style="font-family:var(--font-head); font-size:clamp(14px,2.5vw,20px); font-weight:900; letter-spacing:5px; color:var(--cyan); text-shadow:0 0 20px rgba(0,200,255,0.4); text-transform:uppercase;">Chief Information<br>Security Officer</div>
+      <div style="font-family:var(--font-mono); font-size:10px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase;">The Cognitive Core</div>
+    </div>
+    <div style="width:1px; height:32px; background:linear-gradient(180deg,rgba(0,200,255,0.4),transparent); margin:16px auto 0;"></div>
+  </div>
+  <div class="section-header fade-up">
+    <span class="section-label">12 Core Domains — CISO Responsibility Map</span>
+  </div>
+
+  <div class="domains-grid">
+
+    <!-- GRC -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">⚖️</span>
+      <div class="domain-title">Governance, Risk &amp; Compliance</div>
+      <div class="domain-subtitle">GRC · STRATEGY · POLICY</div>
+      <ul class="domain-list">
+        <li>Develop &amp; maintain enterprise security strategy aligned to business objectives</li>
+        <li>Build and govern the Information Security Policy Framework (50+ policies)</li>
+        <li>Own enterprise risk register; quantify risk in financial terms (FAIR model)</li>
+        <li>Oversee compliance: NIST CSF, ISO 27001, SOC 2, FedRAMP, CMMC, HIPAA, PCI DSS</li>
+        <li>Conduct annual risk assessments &amp; third-party audits</li>
+        <li>Interface with legal, regulatory bodies, and external auditors</li>
+        <li>Manage exceptions process &amp; risk acceptance procedures</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Extend GRC policy framework with AI Risk Policy and AI Ethics Statement</li>
+          <li>Add AI systems to enterprise risk register with GOVERN-phase ownership</li>
+          <li>Map AI governance to EU AI Act, EO 14110, and CISA AI guidelines</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">NIST CSF</span><span class="tag">ISO 27001</span><span class="tag">SOC 2</span>
+        <span class="tag">CMMC</span><span class="tag">FAIR</span>
+        <span class="tag rmf-govern">AI GOVERN</span>
+      </div>
+    </div>
+
+    <!-- SOC -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">🔴</span>
+      <div class="domain-title">Security Operations Center</div>
+      <div class="domain-subtitle">SOC · DETECTION · RESPONSE</div>
+      <ul class="domain-list">
+        <li>Lead 24/7 SOC operations — monitor, detect, analyze, respond, recover</li>
+        <li>Manage SIEM platform tuning: alert fidelity, detection rule engineering</li>
+        <li>Drive SOAR automation and playbook development to compress MTTR</li>
+        <li>Oversee threat intelligence lifecycle: collection, analysis, dissemination</li>
+        <li>Govern Incident Response (IR) program; act as IR commander for P1 events</li>
+        <li>Track and report KPIs: MTTD, MTTR, alert volume, false positive rate</li>
+        <li>Coordinate with federal agencies, ISAC sharing, law enforcement as needed</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Deploy AI IR playbooks for model failure and adversarial ML events (MANAGE)</li>
+          <li>Measure AI detection accuracy — false positive/negative KPIs (MEASURE)</li>
+          <li>Govern human override requirements for AI-assisted alert triage (GOVERN)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">SIEM</span><span class="tag">SOAR</span><span class="tag">XDR</span>
+        <span class="tag">CTI</span><span class="tag">MTTD/MTTR</span>
+        <span class="tag rmf-manage">AI MANAGE</span><span class="tag rmf-measure">AI MEASURE</span>
+      </div>
+    </div>
+
+    <!-- IAM -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">🔐</span>
+      <div class="domain-title">Identity &amp; Access Management</div>
+      <div class="domain-subtitle">IAM · PAM · ZERO TRUST</div>
+      <ul class="domain-list">
+        <li>Define and enforce Zero Trust Architecture (ZTA) across all access layers</li>
+        <li>Govern IAM platform: SSO, MFA, adaptive authentication, lifecycle management</li>
+        <li>Oversee Privileged Access Management (PAM) — JIT access, session recording</li>
+        <li>Manage user access reviews, role recertification, segregation of duties (SoD)</li>
+        <li>Deploy identity threat detection: impossible travel, credential stuffing alerts</li>
+        <li>Drive SCIM/SAML federation and directory services governance</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Govern AI-based behavioral analytics and adaptive auth decision policies (GOVERN)</li>
+          <li>Audit AI access scoring models for bias in access decisions (MEASURE)</li>
+          <li>Maintain human override for AI-denied access in sensitive contexts (MANAGE)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">Zero Trust</span><span class="tag">PAM</span><span class="tag">MFA</span>
+        <span class="tag">SAML</span>
+        <span class="tag rmf-govern">AI GOVERN</span><span class="tag rmf-measure">AI MEASURE</span>
+      </div>
+    </div>
+
+    <!-- Cloud -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">☁️</span>
+      <div class="domain-title">Cloud &amp; Infrastructure Security</div>
+      <div class="domain-subtitle">CSPM · CWPP · CNAPP</div>
+      <ul class="domain-list">
+        <li>Architect cloud security posture across AWS, Azure, GCP multi-cloud estates</li>
+        <li>Deploy and tune CSPM, CWPP, CNAPP for real-time misconfiguration detection</li>
+        <li>Define cloud security guardrails: SCPs, landing zones, network segmentation</li>
+        <li>Govern container &amp; Kubernetes security (image scanning, runtime protection)</li>
+        <li>Oversee network security: NDR, micro-segmentation, SD-WAN, SASE/SSE</li>
+        <li>Manage ICS/OT/IoT security domains where applicable</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Inventory all AI/ML cloud workloads in AWS SageMaker, Azure AI, GCP Vertex (MAP)</li>
+          <li>Security policy for AI training pipeline infrastructure and MLOps environments (GOVERN)</li>
+          <li>CSPM rules for AI workload misconfigurations and data exposure (MEASURE)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">CSPM</span><span class="tag">CNAPP</span><span class="tag">SASE</span>
+        <span class="tag">NDR</span>
+        <span class="tag rmf-map">AI MAP</span><span class="tag rmf-govern">AI GOVERN</span>
+      </div>
+    </div>
+
+    <!-- AppSec -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">💻</span>
+      <div class="domain-title">Application &amp; Product Security</div>
+      <div class="domain-subtitle">SAST · DAST · DEVSECOPS</div>
+      <ul class="domain-list">
+        <li>Embed security into SDLC via DevSecOps — shift-left from design to deploy</li>
+        <li>Govern SAST, DAST, SCA, IAST toolchain integration in CI/CD pipelines</li>
+        <li>Lead Secure Code Review program and developer security training</li>
+        <li>Run Bug Bounty program and coordinate coordinated vulnerability disclosure</li>
+        <li>Oversee API security, OAuth2.0, supply chain security (SBOM, SLSA)</li>
+        <li>Manage penetration testing program (internal red team + third-party)</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Extend DevSecOps to AI-assisted code generation (LLM code security review) (MAP)</li>
+          <li>Test for OWASP LLM Top 10 in AI-enabled applications (MEASURE)</li>
+          <li>SBOM extension: AI model components, ML libraries, dataset provenance (MAP)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">DevSecOps</span><span class="tag">SBOM</span><span class="tag">SCA</span>
+        <span class="tag">Red Team</span>
+        <span class="tag rmf-map">AI MAP</span><span class="tag rmf-measure">AI MEASURE</span>
+      </div>
+    </div>
+
+    <!-- Data -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">🗄️</span>
+      <div class="domain-title">Data Security &amp; Privacy</div>
+      <div class="domain-subtitle">DLP · DSPM · GDPR · CCPA</div>
+      <ul class="domain-list">
+        <li>Build data classification framework: Public → Confidential → Restricted → Secret</li>
+        <li>Govern DLP/DSPM controls across structured &amp; unstructured data at rest/transit</li>
+        <li>Lead encryption strategy: key management, tokenization, HSM governance</li>
+        <li>Align security program to GDPR, CCPA, HIPAA, state privacy laws</li>
+        <li>Oversee data rights management: DSAR handling, consent management</li>
+        <li>Govern database activity monitoring (DAM) and data lineage visibility</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Classify AI training datasets under data classification framework (MAP)</li>
+          <li>Govern PII exposure in model outputs; differential privacy requirements (GOVERN)</li>
+          <li>Test for model inversion and membership inference attack vectors (MEASURE)</li>
+          <li>Respond to training data breach and PII extraction incidents (MANAGE)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">DLP</span><span class="tag">DSPM</span><span class="tag">GDPR</span>
+        <span class="tag">CCPA</span><span class="tag">HSM</span>
+        <span class="tag rmf-map">AI MAP</span><span class="tag rmf-measure">AI MEASURE</span><span class="tag rmf-manage">AI MANAGE</span>
+      </div>
+    </div>
+
+    <!-- AI Security — FEATURED CARD -->
+    <div class="domain-card ai-security-card fade-up">
+      <span class="domain-icon">⚛️</span>
+      <div class="domain-title">AI Security &amp; Quantum Readiness</div>
+      <div class="domain-subtitle">AI GOVERNANCE · NIST AI RMF · PQC · EMERGING RISK</div>
+      <ul class="domain-list">
+        <li>Own enterprise AI Risk Framework — CISO as primary AI risk executive</li>
+        <li>Govern AI/ML security: model poisoning, adversarial inputs, LLM prompt injection, RAG attacks</li>
+        <li>Implement NIST AI RMF GOVERN function: AI risk policy, AI ethics, governance charter</li>
+        <li>Execute NIST AI RMF MAP function: AI system inventory, risk classification, threat modeling</li>
+        <li>Lead NIST AI RMF MEASURE function: AI red team, TEVV, fairness audits, drift monitoring</li>
+        <li>Drive NIST AI RMF MANAGE function: AI IR playbooks, rollback procedures, Board reporting</li>
+        <li>Align to EU AI Act risk tiers, CISA AI security guidance, and EO 14110 obligations</li>
+        <li>Assess trustworthy AI properties: security, privacy, fairness, transparency, accountability</li>
+        <li>Lead Post-Quantum Cryptography (PQC) migration — CRYSTALS-Kyber/Dilithium (FIPS 203/204/205)</li>
+        <li>Conduct "Harvest Now, Decrypt Later" (HNDL) threat analysis; prioritize crypto agility</li>
+        <li>Assess synthetic media, deepfake, and AI-generated phishing risks</li>
+        <li>Monitor agentic AI systems; govern multi-agent orchestration security</li>
+      </ul>
+      <div class="domain-tags">
+        <span class="tag rmf-govern">GOVERN</span>
+        <span class="tag rmf-map">MAP</span>
+        <span class="tag rmf-measure">MEASURE</span>
+        <span class="tag rmf-manage">MANAGE</span>
+        <span class="tag">PQC</span><span class="tag">CRYSTALS-Kyber</span>
+        <span class="tag">LLM Sec</span><span class="tag">OWASP LLM Top 10</span>
+        <span class="tag">EU AI Act</span><span class="tag">EO 14110</span>
+        <span class="tag">CISA AI</span><span class="tag">Crypto Agility</span>
+      </div>
+    </div>
+
+    <!-- TPRM -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">🤝</span>
+      <div class="domain-title">Vendor &amp; Third-Party Risk Mgmt</div>
+      <div class="domain-subtitle">TPRM · SCRM · DUE DILIGENCE</div>
+      <ul class="domain-list">
+        <li>Operate TPRM program: vendor risk tiering, security questionnaires, SIG/CAIQ</li>
+        <li>Review and negotiate security terms in vendor contracts and MSAs</li>
+        <li>Govern supply chain risk: hardware/software bill of materials, trusted suppliers</li>
+        <li>Conduct continuous monitoring of critical third-parties via attack surface tools</li>
+        <li>Manage fourth-party concentration risk and sub-processor visibility</li>
+        <li>Respond to SolarWinds/MOVEit-style supply chain compromise events</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Extend SIG/CAIQ questionnaire with AI-specific risk questions (MAP)</li>
+          <li>Tier vendors by AI risk level; assess third-party AI/ML tool inventory (MAP)</li>
+          <li>Enforce AI transparency clauses in contracts; require model cards (GOVERN)</li>
+          <li>Monitor vendor AI incidents; trigger TPRM escalation for AI failures (MANAGE)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">TPRM</span><span class="tag">SCRM</span><span class="tag">CAIQ</span>
+        <span class="tag">SIG</span>
+        <span class="tag rmf-map">AI MAP</span><span class="tag rmf-govern">AI GOVERN</span><span class="tag rmf-manage">AI MANAGE</span>
+      </div>
+    </div>
+
+    <!-- BC/DR -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">♻️</span>
+      <div class="domain-title">Business Resilience &amp; BC/DR</div>
+      <div class="domain-subtitle">BCP · DR · CRISIS MANAGEMENT</div>
+      <ul class="domain-list">
+        <li>Own Business Continuity Plan (BCP) and Disaster Recovery (DR) programs</li>
+        <li>Define and test RTOs and RPOs across all critical business systems</li>
+        <li>Lead tabletop exercises, red team simulations, and full DR failover drills</li>
+        <li>Govern ransomware response playbooks; manage immutable backup strategy</li>
+        <li>Crisis management: executive communication, media response, regulatory notification</li>
+        <li>Align resilience plans with ISO 22301 and NIST SP 800-34</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Include AI system failure in BCP/DR scope; AI-specific RTO/RPO definitions (MANAGE)</li>
+          <li>AI model rollback procedures and versioning in DR runbooks (MANAGE)</li>
+          <li>Tabletop exercises for adversarial AI attack scenarios (MEASURE)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">ISO 22301</span><span class="tag">RTO/RPO</span>
+        <span class="tag">Tabletop</span><span class="tag">Ransomware</span>
+        <span class="tag rmf-manage">AI MANAGE</span><span class="tag rmf-measure">AI MEASURE</span>
+      </div>
+    </div>
+
+    <!-- People -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">👥</span>
+      <div class="domain-title">People, Culture &amp; Awareness</div>
+      <div class="domain-subtitle">SECURITY CULTURE · TALENT · TRAINING</div>
+      <ul class="domain-list">
+        <li>Recruit, develop, and retain world-class cybersecurity talent across all teams</li>
+        <li>Run Security Awareness Training (SAT) program; phishing simulations quarterly</li>
+        <li>Build a security-first culture across all business units and regions</li>
+        <li>Define security team career frameworks, certifications roadmap (CISSP, CISM, etc.)</li>
+        <li>Drive executive security briefings; train board and C-suite on cyber risk literacy</li>
+        <li>Manage insider threat program — behavioral analytics, HR collaboration</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Extend SAT to include AI risk awareness: deepfakes, AI phishing, prompt injection (GOVERN)</li>
+          <li>Build AI Red Team capability within security team; certify on AI attack frameworks (GOVERN)</li>
+          <li>Governance culture: "responsible AI" training for all employees using AI tools (GOVERN)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">SAT</span><span class="tag">CISSP</span><span class="tag">CISM</span>
+        <span class="tag">Insider Threat</span>
+        <span class="tag rmf-govern">AI GOVERN</span>
+      </div>
+    </div>
+
+    <!-- Board -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">📊</span>
+      <div class="domain-title">Executive &amp; Board Communication</div>
+      <div class="domain-subtitle">BOARD · C-SUITE · METRICS · ROI</div>
+      <ul class="domain-list">
+        <li>Present quarterly cyber risk reports to Board Audit/Risk Committees</li>
+        <li>Translate technical risk into business/financial impact language (EAL, ALE)</li>
+        <li>Build and manage annual security budget; ROI justification for investments</li>
+        <li>Define CISO security dashboard: risk posture KPIs, maturity scores, coverage</li>
+        <li>Advise CEO/CFO/GC on cyber insurance, M&amp;A security due diligence</li>
+        <li>Respond to security-related investor inquiries and ESG reporting requirements</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Include AI risk posture panel in CISO Board dashboard (MEASURE)</li>
+          <li>Report AI governance maturity against NIST AI RMF profile (GOVERN)</li>
+          <li>Advise Board on EU AI Act financial exposure and EO 14110 compliance posture (GOVERN)</li>
+          <li>Communicate AI incident response outcomes with lessons learned (MANAGE)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">Board Reporting</span><span class="tag">ALE/EAL</span>
+        <span class="tag">Budget</span><span class="tag">M&amp;A SecDD</span>
+        <span class="tag rmf-govern">AI GOVERN</span><span class="tag rmf-measure">AI MEASURE</span><span class="tag rmf-manage">AI MANAGE</span>
+      </div>
+    </div>
+
+    <!-- Vuln Mgmt -->
+    <div class="domain-card fade-up">
+      <span class="domain-icon">🔍</span>
+      <div class="domain-title">Vulnerability &amp; Threat Mgmt</div>
+      <div class="domain-subtitle">VM · TVM · ASM · PENTESTING</div>
+      <ul class="domain-list">
+        <li>Run enterprise Vulnerability Management (VM) program with risk-based SLAs</li>
+        <li>Govern Attack Surface Management (ASM): external exposure, shadow IT discovery</li>
+        <li>Prioritize patching via CVSS, EPSS, and business criticality weighting</li>
+        <li>Run red team/blue team/purple team exercises to validate security controls</li>
+        <li>Respond to zero-day advisories with emergency patching protocols</li>
+        <li>Maintain vulnerability metrics: remediation SLA compliance, mean time to patch</li>
+      </ul>
+      <div class="rmf-callout">
+        <div class="rmf-callout-title">⚛ AI RMF Integration</div>
+        <ul>
+          <li>Extend ASM to discover shadow AI and unapproved ML tools in production (MAP)</li>
+          <li>Include AI system vulnerabilities in VM program (model exploits, API abuse) (MEASURE)</li>
+          <li>AI Red Team exercises: adversarial ML, prompt injection, LLM jailbreak campaigns (MEASURE)</li>
+        </ul>
+      </div>
+      <div class="domain-tags">
+        <span class="tag">CVSS/EPSS</span><span class="tag">ASM</span>
+        <span class="tag">Purple Team</span><span class="tag">Zero-Day</span>
+        <span class="tag rmf-map">AI MAP</span><span class="tag rmf-measure">AI MEASURE</span>
+      </div>
+    </div>
+
+  </div><!-- /domains-grid -->
+
+  <!-- ══════════════ CISO SECURITY LIFECYCLE ══════════════ -->
+  <div class="section-header fade-up">
+    <span class="section-label">CISO Security Lifecycle — Continuous Operating Model</span>
+  </div>
+
+  <div class="lifecycle-strip fade-up">
+    <div class="lifecycle-step">
+      <div class="lifecycle-step-icon">🔭</div>
+      <div class="lifecycle-step-name">Identify &amp; Inventory</div>
+      <div class="lifecycle-step-desc">Assets, AI systems, data, vendors, threat landscape</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step-icon">🛡️</div>
+      <div class="lifecycle-step-name">Protect &amp; Harden</div>
+      <div class="lifecycle-step-desc">Controls, ZTA, encryption, DevSecOps, AI security guardrails</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step-icon">🔍</div>
+      <div class="lifecycle-step-name">Detect &amp; Analyze</div>
+      <div class="lifecycle-step-desc">SIEM/SOAR, AI anomaly detection, threat intelligence fusion</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step-icon">⚡</div>
+      <div class="lifecycle-step-name">Respond &amp; Contain</div>
+      <div class="lifecycle-step-desc">IR playbooks incl. AI incidents, SOC commander, regulatory notification</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step-icon">🔄</div>
+      <div class="lifecycle-step-name">Recover &amp; Restore</div>
+      <div class="lifecycle-step-desc">BC/DR, immutable backups, model rollback, post-incident review</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step-icon">📈</div>
+      <div class="lifecycle-step-name">Measure &amp; Report</div>
+      <div class="lifecycle-step-desc">Board dashboards, AI risk KPIs, maturity scores, regulatory posture</div>
+    </div>
+    <div class="lifecycle-step">
+      <div class="lifecycle-step-icon">🚀</div>
+      <div class="lifecycle-step-name">Evolve &amp; Innovate</div>
+      <div class="lifecycle-step-desc">PQC migration, AI governance maturity, emerging tech horizon scanning</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MATURITY DIMENSIONS ══════════════ -->
+  <div class="section-header fade-up">
+    <span class="section-label">Security Program Maturity — CISO Ownership</span>
+  </div>
+
+  <div class="maturity-grid fade-up">
+    <div class="maturity-card">
+      <div class="maturity-title">Security Capability Maturity</div>
+      <div class="maturity-row"><div class="maturity-label">Threat Intelligence</div><div class="maturity-bar-bg"><div class="maturity-bar-fill" style="width:92%"></div></div><div class="maturity-pct">92%</div></div>
+      <div class="maturity-row"><div class="maturity-label">Zero Trust Adoption</div><div class="maturity-bar-bg"><div class="maturity-bar-fill" style="width:78%"></div></div><div class="maturity-pct">78%</div></div>
+      <div class="maturity-row"><div class="maturity-label">Cloud Security Posture</div><div class="maturity-bar-bg"><div class="maturity-bar-fill" style="width:85%"></div></div><div class="maturity-pct">85%</div></div>
+      <div class="maturity-row"><div class="maturity-label">DevSecOps Integration</div><div class="maturity-bar-bg"><div class="maturity-bar-fill" style="width:71%"></div></div><div class="maturity-pct">71%</div></div>
+      <div class="maturity-row"><div class="maturity-label">Third-Party Risk Mgmt</div><div class="maturity-bar-bg"><div class="maturity-bar-fill" style="width:80%"></div></div><div class="maturity-pct">80%</div></div>
+      <div class="maturity-row"><div class="maturity-label">Data Classification</div><div class="maturity-bar-bg"><div class="maturity-bar-fill" style="width:88%"></div></div><div class="maturity-pct">88%</div></div>
+      <div class="maturity-row"><div class="maturity-label">Security Awareness</div><div class="maturity-bar-bg"><div class="maturity-bar-fill" style="width:90%"></div></div><div class="maturity-pct">90%</div></div>
+      <div class="maturity-row"><div class="maturity-label">Incident Response Speed</div><div class="maturity-bar-bg"><div class="maturity-bar-fill" style="width:87%"></div></div><div class="maturity-pct">87%</div></div>
+    </div>
+    <div class="maturity-card">
+      <div class="maturity-title">NIST AI RMF Maturity — AI Program Dimensions</div>
+      <div class="maturity-row"><div class="maturity-label">AI Governance (GOVERN)</div><div class="maturity-bar-bg"><div class="maturity-bar-fill rmf-fill" style="width:72%"></div></div><div class="maturity-pct rmf-pct">72%</div></div>
+      <div class="maturity-row"><div class="maturity-label">AI Inventory / MAP</div><div class="maturity-bar-bg"><div class="maturity-bar-fill rmf-fill" style="width:65%"></div></div><div class="maturity-pct rmf-pct">65%</div></div>
+      <div class="maturity-row"><div class="maturity-label">AI Red Teaming</div><div class="maturity-bar-bg"><div class="maturity-bar-fill rmf-fill" style="width:58%"></div></div><div class="maturity-pct rmf-pct">58%</div></div>
+      <div class="maturity-row"><div class="maturity-label">Bias &amp; Fairness Auditing</div><div class="maturity-bar-bg"><div class="maturity-bar-fill rmf-fill" style="width:50%"></div></div><div class="maturity-pct rmf-pct">50%</div></div>
+      <div class="maturity-row"><div class="maturity-label">AI/ML Security</div><div class="maturity-bar-bg"><div class="maturity-bar-fill rmf-fill" style="width:65%"></div></div><div class="maturity-pct rmf-pct">65%</div></div>
+      <div class="maturity-row"><div class="maturity-label">Post-Quantum Readiness</div><div class="maturity-bar-bg"><div class="maturity-bar-fill rmf-fill" style="width:42%"></div></div><div class="maturity-pct rmf-pct">42%</div></div>
+      <div class="maturity-row"><div class="maturity-label">AI IR Playbooks</div><div class="maturity-bar-bg"><div class="maturity-bar-fill rmf-fill" style="width:55%"></div></div><div class="maturity-pct rmf-pct">55%</div></div>
+      <div class="maturity-row"><div class="maturity-label">EU AI Act Readiness</div><div class="maturity-bar-bg"><div class="maturity-bar-fill rmf-fill" style="width:48%"></div></div><div class="maturity-pct rmf-pct">48%</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ REPORTING STRUCTURE ══════════════════ -->
+  <div class="reporting-section">
+    <div class="section-header">CISO Stakeholder Ecosystem — Reporting &amp; Accountability</div>
+    <div class="org-tree">
+
+      <!-- Board Level -->
+      <div class="org-level">
+        <div class="org-node" style="border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.05)">
+          <div class="org-title" style="color:#c9a84c">Board of Directors</div>
+          <div class="org-role">Audit / Risk Committee</div>
+        </div>
+      </div>
+
+      <div class="org-connector"></div>
+
+      <!-- C-Suite Peers -->
+      <div class="org-level" style="gap:8px">
+        <div class="org-node" style="border-color:rgba(0,180,255,0.25)">
+          <div class="org-title" style="color:#fff">CEO</div>
+          <div class="org-role">Primary Reporting</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(255,71,87,0.35);background:rgba(255,71,87,0.04)">
+          <div class="org-title" style="color:#ff4757">CISO</div>
+          <div class="org-role">YOU · Security Executive</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(0,180,255,0.25)">
+          <div class="org-title" style="color:#fff">CTO / CIO</div>
+          <div class="org-role">Tech Partnership</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(0,180,255,0.25)">
+          <div class="org-title" style="color:#fff">CFO / GC</div>
+          <div class="org-role">Budget &amp; Legal</div>
+        </div>
+      </div>
+
+      <div class="org-connector"></div>
+      <div class="org-horiz-line"></div>
+      <div style="height:12px"></div>
+
+      <!-- Direct Reports -->
+      <div class="org-level" style="gap:8px">
+        <div class="org-node" style="border-color:rgba(0,180,255,0.2);min-width:110px">
+          <div class="org-title" style="color:#00b4ff;font-size:8px">Director</div>
+          <div class="org-role">GRC</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(255,71,87,0.2);min-width:110px">
+          <div class="org-title" style="color:#ff4757;font-size:8px">Director</div>
+          <div class="org-role">SOC / IR</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(155,92,255,0.2);min-width:110px">
+          <div class="org-title" style="color:#9b5cff;font-size:8px">Director</div>
+          <div class="org-role">IAM / ZT</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(0,229,204,0.2);min-width:110px">
+          <div class="org-title" style="color:#00e5cc;font-size:8px">Director</div>
+          <div class="org-role">Cloud Sec</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(0,230,118,0.2);min-width:110px">
+          <div class="org-title" style="color:#00e676;font-size:8px">Director</div>
+          <div class="org-role">AppSec</div>
+        </div>
+        <div class="org-node" style="border-color:rgba(255,140,66,0.2);min-width:110px">
+          <div class="org-title" style="color:#ff8c42;font-size:8px">Director</div>
+          <div class="org-role">Data Sec</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════ NIST AI RMF SECTION ══════════════ -->
+  <div class="section-header fade-up">
+    <span class="section-label">AI Risk Management — NIST AI RMF 1.0 · Embedded Capability</span>
+  </div>
+
+  <!-- Banner -->
+  <div class="ai-rmf-banner fade-up">
+    <div class="ai-rmf-banner-title">⚛️ NIST AI RMF — CISO CAPABILITY INTEGRATION</div>
+    <div class="ai-rmf-banner-desc">
+      The NIST AI RMF 1.0 (January 2023) is one of the frameworks the CISO employs to govern the enterprise AI risk surface. Spanning four functions — GOVERN, MAP, MEASURE, and MANAGE — it is embedded within the AI Security domain and cross-referenced across GRC, data security, TPRM, SOC operations, and executive reporting. It aligns with EU AI Act obligations, CISA AI security guidance, Executive Order 14110, and DoD AI ethics principles.
+    </div>
+    <div class="ai-rmf-banner-tags">
+      <span class="rmf-tag govern">GOVERN</span>
+      <span class="rmf-tag map">MAP</span>
+      <span class="rmf-tag measure">MEASURE</span>
+      <span class="rmf-tag manage">MANAGE</span>
+      <span class="rmf-tag govern">EU AI Act</span>
+      <span class="rmf-tag map">EO 14110</span>
+      <span class="rmf-tag measure">CISA AI Guidance</span>
+      <span class="rmf-tag manage">DoD AI Ethics</span>
+    </div>
+  </div>
+
+  <!-- 4 Core Functions -->
+  <div class="rmf-functions-grid fade-up">
+
+    <div class="rmf-function-card govern">
+      <div class="rmf-fn-label">Function 01</div>
+      <div class="rmf-fn-name govern">GOVERN</div>
+      <div class="rmf-fn-subtitle">Culture, Policy &amp; Accountability</div>
+      <ul class="rmf-fn-items">
+        <li>Establish AI governance structure — executive AI risk committee, CISO as AI risk owner</li>
+        <li>Develop AI Risk Policy, AI Use Policy, and Acceptable Use standards enterprise-wide</li>
+        <li>Define roles: AI Risk Officer, AI Red Team, AI Compliance Lead (RACI matrix)</li>
+        <li>Integrate AI risk into enterprise risk register (ERM) with financial quantification</li>
+        <li>Build AI ethics principles aligned to NIST, OECD AI Principles, and DoD AI Ethics</li>
+        <li>Ensure GOVERN function is active before AI system design or procurement begins</li>
+        <li>Tie AI risk appetite to Board-level risk tolerance statements</li>
+      </ul>
+      <div class="rmf-fn-subcats">
+        <span class="rmf-subcat">GV-1 Policy</span>
+        <span class="rmf-subcat">GV-2 Culture</span>
+        <span class="rmf-subcat">GV-3 Roles</span>
+        <span class="rmf-subcat">GV-4 Org Teams</span>
+        <span class="rmf-subcat">GV-5 Policies</span>
+        <span class="rmf-subcat">GV-6 Policies</span>
+      </div>
+    </div>
+
+    <div class="rmf-function-card map">
+      <div class="rmf-fn-label">Function 02</div>
+      <div class="rmf-fn-name map">MAP</div>
+      <div class="rmf-fn-subtitle">Context, Risk ID &amp; Classification</div>
+      <ul class="rmf-fn-items">
+        <li>Maintain an AI system inventory — catalog all AI/ML models in production, dev, and procurement</li>
+        <li>Classify AI systems by risk tier: minimal, limited, high-risk, unacceptable (aligned to EU AI Act)</li>
+        <li>Map AI use cases to impacted stakeholders: employees, customers, regulators, partners</li>
+        <li>Conduct AI threat modeling: adversarial ML, data poisoning, model inversion, prompt injection</li>
+        <li>Identify sociotechnical risks: bias, fairness failures, explainability gaps, over-reliance</li>
+        <li>Assess third-party AI (SaaS, vendor models) within TPRM context</li>
+        <li>Document data lineage, training data sources, and known data quality issues</li>
+      </ul>
+      <div class="rmf-fn-subcats">
+        <span class="rmf-subcat">MP-1 Context</span>
+        <span class="rmf-subcat">MP-2 Use-Case</span>
+        <span class="rmf-subcat">MP-3 AI Impact</span>
+        <span class="rmf-subcat">MP-4 Risk IDs</span>
+        <span class="rmf-subcat">MP-5 Impacts</span>
+      </div>
+    </div>
+
+    <div class="rmf-function-card measure">
+      <div class="rmf-fn-label">Function 03</div>
+      <div class="rmf-fn-name measure">MEASURE</div>
+      <div class="rmf-fn-subtitle">Assessment, Testing &amp; Metrics</div>
+      <ul class="rmf-fn-items">
+        <li>Define AI risk metrics: model drift rates, adversarial robustness scores, fairness KPIs</li>
+        <li>Conduct pre-deployment AI red teaming: prompt injection, jailbreaks, data extraction</li>
+        <li>Run bias audits and fairness assessments across protected classes and demographics</li>
+        <li>Implement continuous AI monitoring — model performance, anomaly detection in outputs</li>
+        <li>Score AI systems on NIST trustworthy AI properties (accuracy, reliability, transparency)</li>
+        <li>Perform TEVV: Testing, Evaluation, Verification &amp; Validation before production release</li>
+        <li>Benchmark AI system performance against defined organizational tolerances</li>
+      </ul>
+      <div class="rmf-fn-subcats">
+        <span class="rmf-subcat">MS-1 Measure</span>
+        <span class="rmf-subcat">MS-2 AI Red Team</span>
+        <span class="rmf-subcat">MS-3 Bias Audit</span>
+        <span class="rmf-subcat">MS-4 TEVV</span>
+        <span class="rmf-subcat">MS-5 Monitor</span>
+      </div>
+    </div>
+
+    <div class="rmf-function-card manage">
+      <div class="rmf-fn-label">Function 04</div>
+      <div class="rmf-fn-name manage">MANAGE</div>
+      <div class="rmf-fn-subtitle">Response, Treatment &amp; Recovery</div>
+      <ul class="rmf-fn-items">
+        <li>Develop AI Incident Response playbooks: model failure, adversarial attack, bias harm event</li>
+        <li>Implement risk treatment: accept, mitigate, transfer, or avoid AI-specific risks</li>
+        <li>Maintain AI system decommission and rollback procedures — kill switch protocols</li>
+        <li>Govern AI change management — model updates, retraining cycles, version control</li>
+        <li>Manage AI residual risk: document accepted risks with formal sign-off by risk owner</li>
+        <li>Track remediation status of AI risk findings; report to CISO dashboard and Board</li>
+        <li>Integrate AI incidents into enterprise SIEM/SOAR for correlation and response automation</li>
+      </ul>
+      <div class="rmf-fn-subcats">
+        <span class="rmf-subcat">MG-1 Prioritize</span>
+        <span class="rmf-subcat">MG-2 Respond</span>
+        <span class="rmf-subcat">MG-3 Correct</span>
+        <span class="rmf-subcat">MG-4 Monitor</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ TRUSTWORTHY AI PROPERTIES ══════════════ -->
+  <div class="section-header fade-up">
+    <span class="section-label">NIST AI RMF · Trustworthy AI Properties — CISO Ownership</span>
+  </div>
+
+  <div class="trustworthy-grid fade-up">
+    <div class="trustworthy-card">
+      <div class="trustworthy-icon">⚖️</div>
+      <div class="trustworthy-name">Accountable &amp; Transparent</div>
+      <div class="trustworthy-desc">Explainability requirements for AI decisions; audit trails for model actions; disclosure obligations to regulators and users</div>
+    </div>
+    <div class="trustworthy-card">
+      <div class="trustworthy-icon">🛡️</div>
+      <div class="trustworthy-name">Secure &amp; Resilient</div>
+      <div class="trustworthy-desc">Adversarial ML defenses, model hardening, secure training pipelines, supply chain integrity for AI components</div>
+    </div>
+    <div class="trustworthy-card">
+      <div class="trustworthy-icon">🔒</div>
+      <div class="trustworthy-name">Privacy-Enhanced</div>
+      <div class="trustworthy-desc">Differential privacy, federated learning, data minimization in training datasets, PII exposure in model outputs</div>
+    </div>
+    <div class="trustworthy-card">
+      <div class="trustworthy-icon">🎯</div>
+      <div class="trustworthy-name">Valid &amp; Reliable</div>
+      <div class="trustworthy-desc">Model accuracy benchmarks, drift monitoring, performance SLAs, TEVV processes before production deployment</div>
+    </div>
+    <div class="trustworthy-card">
+      <div class="trustworthy-icon">🌐</div>
+      <div class="trustworthy-name">Fair &amp; Bias-Managed</div>
+      <div class="trustworthy-desc">Bias detection in training data, fairness audits across protected classes, demographic parity and equalized odds metrics</div>
+    </div>
+    <div class="trustworthy-card">
+      <div class="trustworthy-icon">🤝</div>
+      <div class="trustworthy-name">Explainable &amp; Interpretable</div>
+      <div class="trustworthy-desc">XAI tooling integration (SHAP, LIME), human-in-the-loop for high-stakes decisions, model card documentation</div>
+    </div>
+    <div class="trustworthy-card">
+      <div class="trustworthy-icon">👤</div>
+      <div class="trustworthy-name">Safe &amp; Human-Overseen</div>
+      <div class="trustworthy-desc">Kill switch procedures, human override requirements for critical decisions, operator liability frameworks, HITL policies</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ AI RMF LIFECYCLE ══════════════ -->
+  <div class="section-header fade-up">
+    <span class="section-label">NIST AI RMF · AI System Lifecycle — Continuous Operating Model</span>
+  </div>
+
+  <div class="ai-rmf-lifecycle fade-up">
+    <div class="ai-rmf-step s1">
+      <div class="ai-rmf-step-num">01</div>
+      <div class="ai-rmf-step-fn">GOVERN</div>
+      <div class="ai-rmf-step-title">Plan &amp; Frame</div>
+      <ul class="ai-rmf-step-items">
+        <li>Establish AI risk policy</li>
+        <li>Define risk appetite</li>
+        <li>Assign AI risk roles</li>
+        <li>Set governance cadence</li>
+      </ul>
+    </div>
+    <div class="ai-rmf-step s2">
+      <div class="ai-rmf-step-num">02</div>
+      <div class="ai-rmf-step-fn">GOVERN + MAP</div>
+      <div class="ai-rmf-step-title">Design &amp; Scope</div>
+      <ul class="ai-rmf-step-items">
+        <li>Classify AI use case</li>
+        <li>Map stakeholder impacts</li>
+        <li>Identify threat vectors</li>
+        <li>Data governance review</li>
+      </ul>
+    </div>
+    <div class="ai-rmf-step s3">
+      <div class="ai-rmf-step-num">03</div>
+      <div class="ai-rmf-step-fn">MAP</div>
+      <div class="ai-rmf-step-title">Develop &amp; Catalog</div>
+      <ul class="ai-rmf-step-items">
+        <li>Add to AI inventory</li>
+        <li>Document model card</li>
+        <li>Threat model the system</li>
+        <li>Conduct bias review</li>
+      </ul>
+    </div>
+    <div class="ai-rmf-step s4">
+      <div class="ai-rmf-step-num">04</div>
+      <div class="ai-rmf-step-fn">MEASURE</div>
+      <div class="ai-rmf-step-title">Evaluate &amp; Test</div>
+      <ul class="ai-rmf-step-items">
+        <li>AI red team exercise</li>
+        <li>TEVV gate review</li>
+        <li>Fairness audit</li>
+        <li>Security pen test</li>
+      </ul>
+    </div>
+    <div class="ai-rmf-step s5">
+      <div class="ai-rmf-step-num">05</div>
+      <div class="ai-rmf-step-fn">MEASURE + MANAGE</div>
+      <div class="ai-rmf-step-title">Deploy &amp; Monitor</div>
+      <ul class="ai-rmf-step-items">
+        <li>Continuous model monitoring</li>
+        <li>Drift alerts &amp; anomalies</li>
+        <li>Incident detection</li>
+        <li>Performance KPI tracking</li>
+      </ul>
+    </div>
+    <div class="ai-rmf-step s6">
+      <div class="ai-rmf-step-num">06</div>
+      <div class="ai-rmf-step-fn">MANAGE</div>
+      <div class="ai-rmf-step-title">Respond &amp; Evolve</div>
+      <ul class="ai-rmf-step-items">
+        <li>Execute AI IR playbook</li>
+        <li>Retrain or rollback</li>
+        <li>Update risk register</li>
+        <li>Board/exec reporting</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════ CROSS-DOMAIN AI RMF INTEGRATION MAP ══════════════ -->
+  <div class="section-header fade-up">
+    <span class="section-label">AI RMF × CISO Domain Integration Map</span>
+  </div>
+
+  <div class="rmf-integration-grid fade-up">
+    <!-- Headers -->
+    <div class="rmf-int-header domain-col">CISO Domain</div>
+    <div class="rmf-int-header govern-col">GOVERN</div>
+    <div class="rmf-int-header map-col">MAP</div>
+    <div class="rmf-int-header measure-col">MEASURE</div>
+    <div class="rmf-int-header manage-col">MANAGE</div>
+    <!-- Row 1 -->
+    <div class="rmf-int-domain">⚖️ GRC &amp; Strategy</div>
+    <div class="rmf-int-cell govern-cell">AI Risk Policy, AI in ERM, Board AI risk appetite</div>
+    <div class="rmf-int-cell map-cell">Map AI systems to compliance obligations (GDPR, CMMC)</div>
+    <div class="rmf-int-cell measure-cell">AI compliance posture scoring, regulatory gap analysis</div>
+    <div class="rmf-int-cell manage-cell">Remediate AI compliance gaps; manage regulatory response</div>
+    <!-- Row 2 -->
+    <div class="rmf-int-domain">🔴 SOC / Detection</div>
+    <div class="rmf-int-cell govern-cell">AI-assisted detection policy; human override requirements</div>
+    <div class="rmf-int-cell map-cell">Catalog AI tools in SIEM/SOAR; adversarial attack vectors</div>
+    <div class="rmf-int-cell measure-cell">Measure AI detection fidelity; false positive/negative rates</div>
+    <div class="rmf-int-cell manage-cell">AI IR playbooks; SOAR automation governance</div>
+    <!-- Row 3 -->
+    <div class="rmf-int-domain">🔐 IAM / Zero Trust</div>
+    <div class="rmf-int-cell govern-cell">AI-based access decisions require explicit governance policy</div>
+    <div class="rmf-int-cell map-cell">Map behavioral analytics AI; identify bias in access scoring</div>
+    <div class="rmf-int-cell measure-cell">Audit AI-driven access anomalies; false denial rate metrics</div>
+    <div class="rmf-int-cell manage-cell">Override AI access denial; review adaptive auth decisions</div>
+    <!-- Row 4 -->
+    <div class="rmf-int-domain">☁️ Cloud &amp; Infra Sec</div>
+    <div class="rmf-int-cell govern-cell">AI workload security policy; CSPM with ML anomaly detection</div>
+    <div class="rmf-int-cell map-cell">Inventory AI cloud services; map multi-cloud AI risk surface</div>
+    <div class="rmf-int-cell measure-cell">CSPM AI misconfiguration metrics; runtime anomaly scores</div>
+    <div class="rmf-int-cell manage-cell">Remediate AI-flagged cloud misconfigs; IR for AI workloads</div>
+    <!-- Row 5 -->
+    <div class="rmf-int-domain">💻 AppSec / DevSecOps</div>
+    <div class="rmf-int-cell govern-cell">AI-in-SDLC policy; LLM code generation security standards</div>
+    <div class="rmf-int-cell map-cell">Threat model AI-generated code risks; prompt injection taxonomy</div>
+    <div class="rmf-int-cell measure-cell">SAST/DAST for AI outputs; LLM security testing (OWASP LLM Top 10)</div>
+    <div class="rmf-int-cell manage-cell">Patch AI-introduced vulnerabilities; block malicious LLM outputs</div>
+    <!-- Row 6 -->
+    <div class="rmf-int-domain">🗄️ Data Sec &amp; Privacy</div>
+    <div class="rmf-int-cell govern-cell">AI training data governance policy; synthetic data standards</div>
+    <div class="rmf-int-cell map-cell">Map PII in training sets; identify data lineage and poisoning risk</div>
+    <div class="rmf-int-cell measure-cell">Differential privacy metrics; model inversion attack testing</div>
+    <div class="rmf-int-cell manage-cell">Respond to training data breach; PII extraction from model outputs</div>
+    <!-- Row 7 -->
+    <div class="rmf-int-domain">⚛️ AI Security (Lead)</div>
+    <div class="rmf-int-cell govern-cell">Own AI governance charter; lead AI risk committee; set AI ethics</div>
+    <div class="rmf-int-cell map-cell">Full AI system inventory; adversarial ML taxonomy; threat modeling</div>
+    <div class="rmf-int-cell measure-cell">AI red team program; TEVV gate; fairness audits; PQC migration metrics</div>
+    <div class="rmf-int-cell manage-cell">AI IR commander; manage model rollback; report to Board on AI risk</div>
+    <!-- Row 8 -->
+    <div class="rmf-int-domain">🤝 Vendor / TPRM</div>
+    <div class="rmf-int-cell govern-cell">AI vendor risk policy; AI contract security clauses (SIG/CAIQ-AI)</div>
+    <div class="rmf-int-cell map-cell">Map third-party AI tools; assess vendor AI risk tier</div>
+    <div class="rmf-int-cell measure-cell">Score vendor AI posture; audit AI SLAs and model disclosure</div>
+    <div class="rmf-int-cell manage-cell">Respond to vendor AI incident; enforce contractual AI obligations</div>
+    <!-- Row 9 -->
+    <div class="rmf-int-domain">📊 Board &amp; Exec Comms</div>
+    <div class="rmf-int-cell govern-cell">Present AI governance framework to Board; define AI risk appetite</div>
+    <div class="rmf-int-cell map-cell">Translate AI risk landscape into business impact language</div>
+    <div class="rmf-int-cell measure-cell">AI risk KPI dashboard; maturity scores; regulatory readiness</div>
+    <div class="rmf-int-cell manage-cell">Brief Board on AI incidents; communicate AI risk treatment decisions</div>
+  </div>
+
+  <!-- ══════════════ AI RISK CATEGORIES ══════════════ -->
+  <div class="section-header fade-up">
+    <span class="section-label">AI Risk Taxonomy · CISO Threat Surface</span>
+  </div>
+
+  <div class="ai-risk-grid fade-up">
+    <div class="ai-risk-card">
+      <div class="ai-risk-icon">🎯</div>
+      <div class="ai-risk-title">Technical AI Risks</div>
+      <ul class="ai-risk-items">
+        <li>Model poisoning &amp; backdoor attacks</li>
+        <li>Adversarial input manipulation</li>
+        <li>Training data extraction / inversion</li>
+        <li>Membership inference attacks</li>
+        <li>Model evasion &amp; bypass techniques</li>
+        <li>LLM prompt injection / jailbreaks</li>
+        <li>RAG poisoning, indirect injection</li>
+        <li>Supply chain compromise (AI libs)</li>
+      </ul>
+    </div>
+    <div class="ai-risk-card">
+      <div class="ai-risk-icon">⚖️</div>
+      <div class="ai-risk-title">Governance &amp; Compliance Risks</div>
+      <ul class="ai-risk-items">
+        <li>Unregistered / shadow AI in production</li>
+        <li>EU AI Act high-risk non-compliance</li>
+        <li>Executive Order 14110 obligations</li>
+        <li>FTC AI disclosure requirements</li>
+        <li>NYDFS/state AI regulatory exposure</li>
+        <li>Algorithmic accountability failures</li>
+        <li>AI-generated content disclosure gaps</li>
+        <li>Contract AI liability blind spots</li>
+      </ul>
+    </div>
+    <div class="ai-risk-card">
+      <div class="ai-risk-icon">🌐</div>
+      <div class="ai-risk-title">Sociotechnical &amp; Bias Risks</div>
+      <ul class="ai-risk-items">
+        <li>Discriminatory outcomes in access/hiring</li>
+        <li>Demographic parity failures</li>
+        <li>Explainability gaps in critical decisions</li>
+        <li>Over-reliance and automation bias</li>
+        <li>Synthetic media / deepfake misuse</li>
+        <li>AI-generated phishing campaigns</li>
+        <li>Social engineering amplification</li>
+        <li>Misinformation propagation at scale</li>
+      </ul>
+    </div>
+    <div class="ai-risk-card">
+      <div class="ai-risk-icon">⚡</div>
+      <div class="ai-risk-title">Emerging &amp; Quantum-Adjacent</div>
+      <ul class="ai-risk-items">
+        <li>Harvest Now, Decrypt Later (HNDL) vs. AI models</li>
+        <li>Q-Day impact on AI crypto foundations</li>
+        <li>Quantum-enhanced adversarial attacks</li>
+        <li>Agentic AI autonomous decision risks</li>
+        <li>Multi-agent system coordination failures</li>
+        <li>AI model hallucination in ops context</li>
+        <li>General AI / AGI transition risks</li>
+        <li>Neuromorphic computing threat horizon</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="footer">
+    <div class="footer-name">SKY SHARMA</div>
+    <div class="footer-subtitle">
+      CISO &amp; Cyber Leader &nbsp;·&nbsp; Cognitive Innovator &nbsp;·&nbsp; AI, Quantum &amp; Data Ethics Expert &nbsp;·&nbsp; Driving Global Impact
+    </div>
+    <div class="footer-copyright">
+      CISO COGNITIVE MAP · EXECUTIVE INTELLIGENCE FRAMEWORK<br>
+      For professional and educational purposes &nbsp;·&nbsp; © Sky Sharma 2026 &nbsp;·&nbsp; All domain content reflects enterprise security best practices
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Intersection Observer for fade-up animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
